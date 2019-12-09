@@ -6,8 +6,12 @@
 /*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/08 17:17:12 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/08 18:07:24 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
+
+int		main(int argc, char **argv)
+{
+
