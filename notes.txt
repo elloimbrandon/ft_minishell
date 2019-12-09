@@ -1,0 +1,13 @@
+
+		****MINI SHELL NOTES****
+- initialize, interpret, terminate
+- (initalizing the environment) extern char **environ is a global char array that stores other global
+varibles but just the names and values, not the address, that is a seperate list. ex. foo=bar is at 
+address 100.
+- the basic program loop should be 3 steps (read, parse, and execute) in that order
+- (read) read the command from standard input.
+- (parse) seperate 
+		****Parsing steps****
+-(split by semi colon, then by the spaces)
+-(store into 2d array)
+-(one 2d array will be the command and the second will be the argument)

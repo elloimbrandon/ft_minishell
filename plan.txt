@@ -1,0 +1,7 @@
+					****PLAN FOR MINISHELL****
+- start with knowing how to initalize the env and getting that ready
+- ill probably end up storing everything into a 2d char array but might change later
+- create a while loop to read the input arguments, parse them and store them into 2d array or whatever storage method i decide
+- after storage ill need to execute the commands that were stored as input
+- after execution ill need to figure out options for exitting
+
