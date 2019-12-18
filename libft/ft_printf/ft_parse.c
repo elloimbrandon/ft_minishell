@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parse.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:32:40 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/08/19 21:39:00 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/18 15:29:24 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,27 @@ int		ft_check_conversion(int i, char *format, char c, t_ops *ops)
 		if (c == format[i])
 			ops->conversion = c;
 	return (ops->conversion ? 1 : 0);
+}
+
+char	*check_space(char *str, t_ops *ops)
+{
+	char	*newstr;
+	char	*temp;
+
+	newstr = ft_strnew(ft_strlen(str));
+	if (ops->space == 1 && !ops->minus && !ops->width)
+	{
+		newstr[0] = ' ';
+		ft_strncat(newstr, str, ft_strlen(str));
+	}
+	else if (ops->space == 1 && ops->minus && !ops->add)
+	{
+		newstr[0] = '-';
+		ft_strncat(newstr, str, ft_strlen(str));
+	}
+	else
+		return (str);
+	temp = newstr;
+	free(newstr);
+	return (temp);
 }

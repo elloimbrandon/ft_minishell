@@ -3,16 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_flags_mods.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 17:28:09 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/08/19 22:34:56 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/18 15:29:19 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		flag_mods(t_ops *ops, char *str, char *output)
+static char		*output_swap(char *output)
+{
+	char *temp;
+
+	temp = output;
+	free(output);
+	return (temp);
+}
+
+int				flag_mods(t_ops *ops, char *str, char *output)
 {
 	t_vals	vals;
 	t_vals	wvals;
@@ -37,33 +46,14 @@ int		flag_mods(t_ops *ops, char *str, char *output)
 		wvals.length = ft_strlen(str);
 		output = width_flags(output, str, ops, &wvals);
 	}
-	ops->printed = ft_putstrf(output, ops);
-	return (ops->printed);
+	output = output_swap(output);
+	return (ops->printed = ft_putstrf(output, ops));
 }
 
-char	*check_space(char *str, t_ops *ops)
-{
-	char	*newstr;
-
-	newstr = ft_strnew(ft_strlen(str));
-	if (ops->space == 1 && !ops->minus && !ops->width)
-	{
-		newstr[0] = ' ';
-		ft_strncat(newstr, str, ft_strlen(str));
-	}
-	else if (ops->space == 1 && ops->minus && !ops->add)
-	{
-		newstr[0] = '-';
-		ft_strncat(newstr, str, ft_strlen(str));
-	}
-	else
-		return (str);
-	return (newstr);
-}
-
-char	*precision_flags(t_ops *ops, char *str)
+char			*precision_flags(t_ops *ops, char *str)
 {
 	char	*temp;
+	char	*temp2;
 	t_vals	vals;
 
 	temp = ft_strnew(ft_strlen(str) + ops->precision);
@@ -84,10 +74,12 @@ char	*precision_flags(t_ops *ops, char *str)
 				ops->precision--;
 		}
 	}
-	return (temp);
+	temp2 = temp;
+	free(temp);
+	return (temp2);
 }
 
-char	*width_flags(char *output, char *str, t_ops *ops, t_vals *wvals)
+char			*width_flags(char *output, char *str, t_ops *ops, t_vals *wvals)
 {
 	ft_width_check(output, str, ops, wvals);
 	while (!ops->width && str[wvals->x] && output[wvals->i])
@@ -111,7 +103,7 @@ char	*width_flags(char *output, char *str, t_ops *ops, t_vals *wvals)
 	return (output);
 }
 
-char	*no_perc_width(char *temp, char *str, t_ops *ops)
+char			*no_perc_width(char *temp, char *str, t_ops *ops)
 {
 	int		i;
 	int		x;

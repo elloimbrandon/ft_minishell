@@ -1,6 +1,6 @@
 NAME = libft.a
 
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 
 HEADER = libft.h
 
@@ -32,6 +32,7 @@ all: $(NAME)
 $(NAME):
 	@gcc $(FLAGS) -c $(SRCS) $(PRINTF) -I $(HEADER)
 	@ar rc $(NAME) $(OBJS)
+	@rm -rf *.o
 
 clean:
 	@rm -rf $(OBJS)

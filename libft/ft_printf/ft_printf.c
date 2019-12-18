@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/10 12:06:56 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/08/19 21:17:14 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/18 15:29:29 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 /*
 ** %[parameter][flags][width][.precision][length] type
+*/
+
+/*
+** BROKEN-> (' ' space flag, b flag(leaks/double-free), long long max, p flag)
+** [[also watch some mixed flags]]
 */
 
 int		ft_apply_conversion(va_list list, t_ops *ops)
