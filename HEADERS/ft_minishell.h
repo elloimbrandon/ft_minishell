@@ -18,6 +18,11 @@
 ** Structs
 */
 
+typedef struct		s_info
+{
+
+}					t_info;
+
 /*
 ** Functions
 */
