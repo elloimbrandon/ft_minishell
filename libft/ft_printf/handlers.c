@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 23:35:32 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/08/19 22:35:31 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/18 15:29:39 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int		handle_char(va_list list, t_ops *ops)
 		temp[x] = '%';
 	ft_check_null(temp, 0, ops);
 	ops->printed = flag_mods(ops, temp, NULL);
+	free(temp);
 	return (ops->printed);
 }
 
@@ -61,6 +62,7 @@ int		handle_int(va_list list, t_ops *ops)
 		ft_strdel(&str);
 	}
 	ops->printed = flag_mods(ops, temp, NULL);
+	free(temp);
 	return (ops->printed);
 }
 
@@ -84,6 +86,7 @@ int		handle_oc_hex_ptr(va_list list, t_ops *ops)
 			ft_itoabase(x, 16, ops, temp);
 	}
 	ops->printed = flag_mods(ops, temp, NULL);
+	free(temp);
 	return (ops->printed);
 }
 
@@ -104,5 +107,6 @@ int		handle_unll(va_list list, t_ops *ops)
 	else if (!x)
 		temp[0] = '0';
 	ops->printed = flag_mods(ops, temp, NULL);
+	free(temp);
 	return (ops->printed);
 }
