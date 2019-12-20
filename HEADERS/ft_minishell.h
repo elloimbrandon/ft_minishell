@@ -18,10 +18,11 @@
 ** Structs
 */
 
-typedef struct		s_info
+typedef struct		s_env
 {
-
-}					t_info;
+    char            *name;
+    char            *value;
+}					t_env;
 
 /*
 ** Functions
