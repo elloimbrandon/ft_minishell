@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 18:17:18 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/08/30 05:23:54 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/19 23:45:59 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void			ft_lstadd(t_list **alst, t_list *new);
 void			ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void			ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
 void			ft_lstiter(t_list *lst, void (*f)(t_list *elem));
+void			ft_free_2d(char **str);
 char			*ft_itoa(int n);
 char			*ft_strnew(size_t size);
 char			*ft_strcat(char *s1, const char *s2);
