@@ -20,12 +20,14 @@
 
 typedef struct		s_env
 {
-    char            *name;
-    char            *value;
+    char            **env_copy;
+
 }					t_env;
 
 /*
 ** Functions
 */
 
+void		init_struct(t_env *env);
+void		copy_env(t_env *env);
 #endif
