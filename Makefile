@@ -1,4 +1,4 @@
-SRCS = ./SRCS/
+SRCS = ./SRCS/main.c
 
 NAME = minishell
 
