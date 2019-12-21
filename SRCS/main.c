@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/20 22:23:26 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/20 22:52:53 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 //     return(ft_strsplit("", ';'));
 // }
 
-// void    ft_store_cmd(t_env *env, int argc, char **argv)
+// void    ft_store_cmd(t_env *env)
 // {
 //     if (argc >= 1)
 //     {
@@ -79,7 +79,7 @@ int    display_prompt(void)
 {
     char *display;
     int size = 1000;
-
+ 
     display = ft_memalloc(sizeof(char *) * size);
     getcwd(display, size);
     ft_printf("%s $>", display);
@@ -100,7 +100,7 @@ void    display_get_input(t_env *env)
     {
         display_prompt();
         get_next_line(0, &(env->input));
-        //ft_store_cmd(env, argc, argv);
+        //ft_store_cmd(env);
     }
 }
 
