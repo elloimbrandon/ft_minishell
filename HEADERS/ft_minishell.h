@@ -33,6 +33,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
     int             set_e; // set global env var
     int             unset_e; // unset global env var
     int             qoutes; // (has to equal 2) if theirs "  " for use of sentences for cat and echo
+    int             nbr_of_cmds;
 }                   t_cmd;
 
 /*
@@ -44,5 +45,7 @@ int         display_prompt(void);
 void		init_struct(t_env *env);
 void		copy_env_var(t_env *env);
 void        display_get_input(t_env *env);
+void        init_input_check(t_cmd *input_check);
+void        ft_parse_cmd(t_env *env);
 //void        ft_parse_cmd(t_env *env);
 #endif

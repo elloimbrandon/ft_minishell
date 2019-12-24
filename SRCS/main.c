@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/24 00:28:13 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/24 02:15:34 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,22 @@ void    init_input_check(t_cmd *input_check)
     input_check->set_e = 0;
     input_check->unset_e = 0;
     input_check->qoutes = 0;
+    input_check->nbr_of_cmds = 0;
 }
+// int     double_len(char **str)
+// {
+//     int len;
 
-void    check_cmds(char *temp)
-{
+//     len = 0;
+//     while(str[len])
+//         len++;
+//     len--;
+//     return(len);
+// }
+// void    check_cmds(char *temp)
+// {
     
-}
+// }
 
 void    ft_parse_cmd(t_env *env)
 {
@@ -92,15 +102,23 @@ void    ft_parse_cmd(t_env *env)
     char **temp;
     int len;
     int i;
+    int k;
 
     i = 0;
-    len = 0;
+    k = 0;
     input_check = ft_memalloc(sizeof(t_cmd));
-    while(env->input[len])
-        len++;
-    len--;
-    while(env->input)
-
+    temp = ft_memalloc(sizeof(char **) + 1);
+    while(env->input[i]) // while going through the string, if we find a space or semi store that part of the array from 0 into 2d
+    {
+        if (!(env->input[i] == ' ') || !(env->input[i] == ';'))
+            i++;
+        else
+        {
+            temp[k] = ft_strndup(env->input, i);
+            i++;
+            k++;
+        }
+    }
     // init_input_check(input_check);
     // check_cmds(temp);
     // free(temp);
