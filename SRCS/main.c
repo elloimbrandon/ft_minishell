@@ -6,35 +6,13 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/20 22:52:53 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/24 00:28:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> /////////////////// REMOVE
 
-// void    **find_path(t_env *env)
-// {
-//     int i;
-
-//     i= 0;
-//     while(env->env_copy[i])
-//     {
-//         if(ft_strcmp(env->cmd_copy, "PATH") == 0)
-//             return (ft_strsplit(env->env_copy, ':'));
-//         i++;
-//     }
-//     return(ft_strsplit("", ';'));
-// }
-
-// void    ft_store_cmd(t_env *env)
-// {
-//     if (argc >= 1)
-//     {
-        
-//     }
-
-// }
 
 /*
 ** setting up struct variables, setting some to 0 or NULL and allocating space
@@ -83,7 +61,7 @@ int    display_prompt(void)
     display = ft_memalloc(sizeof(char *) * size);
     getcwd(display, size);
     ft_printf("%s $>", display);
-    free(display);
+    free(display); 
     return(0);
 }
 
@@ -93,14 +71,47 @@ void    sigint_handler(int sig_num)
     ft_printf("\n");
     display_prompt();
 }
+void    init_input_check(t_cmd *input_check)
+{
+    input_check->echo = 0;
+    input_check->exit = 0;
+    input_check->cd = 0;
+    input_check->set_e = 0;
+    input_check->unset_e = 0;
+    input_check->qoutes = 0;
+}
 
+void    check_cmds(char *temp)
+{
+    
+}
+
+void    ft_parse_cmd(t_env *env)
+{
+    t_cmd *input_check;
+    char **temp;
+    int len;
+    int i;
+
+    i = 0;
+    len = 0;
+    input_check = ft_memalloc(sizeof(t_cmd));
+    while(env->input[len])
+        len++;
+    len--;
+    while(env->input)
+
+    // init_input_check(input_check);
+    // check_cmds(temp);
+    // free(temp);
+}
 void    display_get_input(t_env *env)
 {
     while(1)
     {
         display_prompt();
         get_next_line(0, &(env->input));
-        //ft_store_cmd(env);
+        ft_parse_cmd(env);
     }
 }
 
