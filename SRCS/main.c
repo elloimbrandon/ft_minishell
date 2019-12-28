@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/24 02:15:34 by brandonf         ###   ########.fr       */
+/*   Updated: 2019/12/27 22:15:34 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,33 @@
 
 
 /*
+** copying evironment varibles from (**environ) to a 2d array we 
+** created for parsing and later output if needed
 ** setting up struct variables, setting some to 0 or NULL and allocating space
 ** for others for later use
 */
 
-void    init_struct(t_env *env)
-{
-    env->input = NULL;
-    env->env_copy = NULL;
-    env->cmd_copy = ft_memalloc(sizeof(char **));
-}
-
-/* 
-** copying evironment varibles from (**environ) to a 2d array we 
-** created for parsing and later output if needed
-*/
-
-void    copy_env_var(t_env *env)
+void    init_struct(t_env *env, t_cmd *input_check)
 {
     extern char **environ;
-    int i;
-    int len;
 
-    len = 0;
-    i = -1;
-    while(environ[len])
-        len++;
-    len--;
-    env->env_copy = ft_memalloc(sizeof(char*) * (len + 1));
-    while(environ[++i])
-       env->env_copy[i] = ft_strdup(environ[i]);
-    env->env_copy[i] = NULL;
+    env->env_copy = copy_2d_array(environ);
+    env->cmd_copy = ft_memalloc(sizeof(char **));
+    env->input = NULL;
+    env->output = NULL;
+    input_check->echo = 0;
+    input_check->exit = 0;
+    input_check->cd = 0;
+    input_check->set_e = 0;
+    input_check->unset_e = 0;
+    input_check->qoutes = 0;
+    input_check->tilde = 0;
+    input_check->expansions = 0;
+    input_check->nbr_of_cmds = 0;
 }
 
 /*
-** initializing the layout of the command prompt and grabbing
+** initializing the layout of  the command prompt and grabbing
 ** the current path of the directory we're working in to display
 */
 
@@ -71,75 +63,153 @@ void    sigint_handler(int sig_num)
     ft_printf("\n");
     display_prompt();
 }
-void    init_input_check(t_cmd *input_check)
-{
-    input_check->echo = 0;
-    input_check->exit = 0;
-    input_check->cd = 0;
-    input_check->set_e = 0;
-    input_check->unset_e = 0;
-    input_check->qoutes = 0;
-    input_check->nbr_of_cmds = 0;
-}
-// int     double_len(char **str)
-// {
-//     int len;
 
-//     len = 0;
-//     while(str[len])
-//         len++;
-//     len--;
-//     return(len);
-// }
 // void    check_cmds(char *temp)
 // {
     
 // }
 
-void    ft_parse_cmd(t_env *env)
+void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
 {
-    t_cmd *input_check;
-    char **temp;
-    int len;
+   
+    char **input_copy;
     int i;
-    int k;
 
     i = 0;
-    k = 0;
-    input_check = ft_memalloc(sizeof(t_cmd));
-    temp = ft_memalloc(sizeof(char **) + 1);
-    while(env->input[i]) // while going through the string, if we find a space or semi store that part of the array from 0 into 2d
+    input_copy = ft_strsplit(env->input, ';');
+    free(env->input);
+    if (!input_copy)
     {
-        if (!(env->input[i] == ' ') || !(env->input[i] == ';'))
-            i++;
-        else
+        printf("somthings wrong\n");
+        exit(1);
+    }
+    while(input_copy[i])
+    {
+        input_copy[i] = split_by_space(input_copy[i]);
+        search_input(input_copy[i], input_check); // searching for expansions and tilde
+        handle_cmds(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
+        i++;
+    }
+    //check_cmds(temp);
+    ft_free_2d(input_copy);
+}
+
+void    handle_cmds(char *input_copy, t_cmd *input_check, t_env *env)
+{
+    if(input_check->expansions >= 1)
+        handle_exp(input_copy, input_check, env);
+    else if(input_check->tilde >= 1)
+        handle_tilde(input_copy, input_check);
+    else if(!input_check->expansions && !input_check->tilde)
+        exec_cmd(input_copy, input_check);
+}
+
+void    handle_exp(char *input_copy, t_cmd *input_check, t_env *env)
+{
+    char *temp;
+    int i;
+
+    i = 0;
+    while(input_copy[i] && input_check->expansions >= 1)
+    {
+        if(ft_strrchr(input_copy[i], '$'))
         {
-            temp[k] = ft_strndup(env->input, i);
-            i++;
-            k++;
+            ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
+            temp = ft_memalloc(sizeof(char*) * ft_strlen(input_copy[i]));
+            temp = ft_strcpy(temp, input_copy[i]);
+            temp = ft_strcat(temp, "=");
+            find_env_var(temp, env); // could have it placed in a stuct 1d array for return??
+            input_check->expansions--;
+            free(temp);
         }
     }
-    // init_input_check(input_check);
-    // check_cmds(temp);
-    // free(temp);
 }
-void    display_get_input(t_env *env)
+
+void    *find_env_var(char *temp, t_env *env)
 {
-    while(1)
+    int i;
+    int len;
+
+    i = 0;
+    len = ft_strlen(temp);
+    while(env->env_copy[i])
+    {
+        if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
+        {
+            len = len += ft_strlen(env->env_copy[i]);
+            env->output = ft_memalloc(sizeof(char *) + len);
+            env->output = ft_strcpy(env->output, temp);
+            ft_strcat(env->output, env->env_copy[i]);
+        }
+        i++;
+    }
+}
+
+void    exec_cmd(char **input_copy, t_cmd *input_check)
+{
+    
+}
+
+void    search_input(char *temp, t_cmd *input_check)
+{
+    int i;
+
+    i = -1;
+    while(temp[++i])
+    {
+        if(strrchr(temp[i], '$') && !(strrchr(temp[i + 1], '$'))) // could do the same for qoutes
+            input_check->expansions += 1; // minus one away after execution
+        else if(ft_strchr(temp[i], '~') && !(strrchr(temp[i + 1], '~')))
+            input_check->tilde += 1;  // minus one away after execution
+    }    
+}
+
+char    *split_at_space(char *temp)
+{
+    char *ret;
+    int i;
+
+    i = -1;
+    while(temp[++i])
+        ret = ft_strsplit(temp[i], ' ');
+    free(temp);
+    return(ret);
+}
+
+
+void    display_get_input(t_env *env, t_cmd *input_check)
+{
+    while(ft_printf("Ft_Minishell") > 0 && get_next_line(0, &(env->input)) == 1)
     {
         display_prompt();
-        get_next_line(0, &(env->input));
-        ft_parse_cmd(env);
+        ft_parse_cmd(env, input_check);
     }
 }
 
 int        main(void)
 {
     t_env   *env;
+    t_cmd   *input_check;
 
     env = ft_memalloc(sizeof(t_env));
-    init_struct(env);
-    copy_env_var(env);
+    input_check = ft_memalloc(sizeof(t_cmd));
+    init_structs(env, input_check);
     signal(SIGINT, sigint_handler);
-    display_get_input(env);
+    display_get_input(env, input_check);
 }
+
+// int        main(void)
+// {
+//     t_env   *env;
+
+//     env = ft_memalloc(sizeof(t_env));
+//     init_struct(env);
+//     int i = 0;
+//     while(env->env_copy[i])
+//     {
+//         printf("%s", env->env_copy[i]);
+//         printf("\n");
+//         i++;
+//     }
+//     return(0);
+// }
