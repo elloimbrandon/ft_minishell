@@ -1,4 +1,4 @@
-SRCS = ./SRCS/main.c
+SRCS = ./SRCS/main.c ./SRCS/ft_signal.c
 
 NAME = minishell
 
