@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 18:17:18 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/27 18:22:21 by brfeltz          ###   ########.fr       */
+/*   Updated: 2019/12/27 22:01:40 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int				ft_atoi(const char *str);
 int				ft_do_op(char *nbr1, char op, char *nbr2);
 int				ft_max(int *tab, unsigned int length);
 int				ft_strcmp(const char *s1, const char *s2);
+int				ft_strccmp(const char *s1, const char *s2, char c);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 int				ft_strequ(char const *s1, char const *s2);
 int				ft_strnequ(char const *s1, char const *s2, size_t n);
