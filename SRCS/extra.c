@@ -24,4 +24,21 @@ int     check_exit(t_env *env)
     else
         return(0);
 }
+
+void    search_input(char *input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = -1;
+    while(input_copy[++i])
+    {
+        if(ft_strrchr(input_copy[i], '$') && !(ft_strrchr(input_copy[i + 1], '$'))) // could do the same for qoutes
+        {
+            input_check->expansions += 1; // minus one away after execution
+            printf("its regestering a struct hit for $\n");
+        }
+        else if(ft_strchr(input_copy[i], '~') && !(ft_strrchr(input_copy[i + 1], '~')))
+            input_check->tilde += 1;  // minus one away after execution
+    }    
+}
 */
