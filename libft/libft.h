@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 18:17:18 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/19 23:45:59 by brandonf         ###   ########.fr       */
+/*   Updated: 2019/12/27 18:22:21 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ char			*ft_strdup(const char *src);
 char			*ft_strtrim(char const *s);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			**ft_strsplit(char const *s, char c);
+char			**copy_2d_array(char **str);
 char			*ft_strrev(char *str);
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 t_list			*ft_lstnew(void const *content, size_t content_size);
