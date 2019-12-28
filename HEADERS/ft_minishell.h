@@ -14,6 +14,15 @@
 ** Macros
 */
 
+# define KRED "\x1B[31m"
+# define KNRM  "\x1B[0m"
+# define KRED  "\x1B[31m"
+# define KGRN  "\x1B[32m"
+# define KYEL  "\x1B[33m"
+# define KBLU  "\x1B[34m"
+# define KMAG  "\x1B[35m"
+# define KCYN  "\x1B[36m"
+# define KWHT  "\x1B[37m"
 
 /*
 ** Structs
@@ -45,11 +54,19 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
 */
 
 void        sigint_handler(int sig_num);
+void        sigquit_handler(int sig_num);
+void        ft_hello(void);
 int         display_prompt(void);
-void		init_struct(t_env *env, t_cmd *input_check);
-void        display_get_input(t_env *env, t_cmd *input_check);
+void		init_structs(t_env *env, t_cmd *input_check);
+int        display_get_input(t_env *env, t_cmd *input_check);
 void        init_input_check(t_cmd *input_check);
 void        ft_parse_cmd(t_env *env, t_cmd *input_check);
-//int         check_exit(t_env *env);
-//void        ft_parse_cmd(t_env *env);
+
+// testing these functions 
+char        **split_by_space(char *input_copy);
+void        search_input(char *input_copy, t_cmd *input_check);
+void        handle_cmds(char *input_copy, t_cmd *input_check, t_env *env);
+void        handle_exp(char *input_copy, t_cmd *input_check, t_env *env);
+void        find_env_var(char *temp, t_env *env);
+
 #endif
