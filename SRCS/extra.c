@@ -61,4 +61,6 @@ int exec_fork(t_env *env)
     wait(&child);
     return (0);
 }
+
+// while(!display_prompt() && get_next_line(STDIN_FILENO, &(temp))) <------ for read loop alternative
 */
