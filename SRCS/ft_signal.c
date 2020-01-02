@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/28 21:34:41 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/01 15:50:16 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 int    display_prompt(void)
 {
     char display[BUFF + 1];
- 
+    
     getcwd(display, BUFF);
     ft_printf("%s%s$>", KGRN, display);
     return(0);

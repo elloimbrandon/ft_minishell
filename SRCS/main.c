@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/12/28 03:05:53 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/02 00:06:47 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,47 +126,67 @@ void    init_structs(t_env *env, t_cmd *input_check)
 //     return(ret);
 // }
 
-void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
-{
+// void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
+// {
    
-    char **input_copy;
-    int i;
+//     char **input_copy;
+//     int i;
 
-    i = 0;
-    input_copy = ft_strsplit(env->input, ';');
-    free(env->input);
-    if (!input_copy)
+//     i = 0;
+//     input_copy = ft_strsplit(env->input, ';');
+//     free(env->input);
+//     if (!input_copy)
+//     {
+//         printf("somthings wrong\n");
+//         exit(1);
+//     }
+//     while(input_copy[i])
+//     {
+//         input_copy = split_by_space(input_copy[i]);
+//         search_input(input_copy[i], input_check); // searching for expansions and tilde
+//         handle_cmds(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
+//         i++;
+//     }
+//     ft_free_2d(input_copy);
+// }
+static char    *get_input(void)
+{
+    char *temp;
+    char buf[BUFF + 1];
+    int ret;
+
+    buf[1] = 0;
+    while((ret = read(0, buf, 1)) && buf[0] != '\n')
     {
-        printf("somthings wrong\n");
-        exit(1);
+        buf[ret] = '\0';
+        ft_strjoin(temp[0], buf);
     }
-    // while(input_copy[i])
-    // {
-    //     input_copy = split_by_space(input_copy[i]);
-    //     search_input(input_copy[i], input_check); // searching for expansions and tilde
-    //     handle_cmds(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
-    //     i++;
-    // }
-    ft_free_2d(input_copy);
-}
+    //free(str);
+ }
 
 void    display_get_input(t_env *env, t_cmd *input_check) // changed from void
 {
-    // while(get_next_line(0, &(env->input)) == 1)
-    while(1)
+    char *temp;
+
+    temp = NULL;
+    while(!display_prompt() && get_next_line(STDIN_FILENO, &(temp)))
     {
-        display_prompt();
-        get_next_line(0, &(env->input));
-        if(env->input)
-            ft_parse_cmd(env, input_check);
+        temp = get_input();
+        // display_prompt();
+        // get_next_line(STDIN_FILENO, &(temp));
+        //ft_parse_cmd(env, input_check);
+        printf("%s <-- contents of temp\n", temp);
     }
 }
 
+/// cntrl-d (no input like enter)
 int        main(void)
 {
     t_env   *env;
     t_cmd   *input_check;
+    char *temp;
 
+    temp = NULL;
     env = ft_memalloc(sizeof(t_env));
     input_check = ft_memalloc(sizeof(t_cmd));
     init_structs(env, input_check);

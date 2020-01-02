@@ -41,4 +41,24 @@ void    search_input(char *input_copy, t_cmd *input_check)
             input_check->tilde += 1;  // minus one away after execution
     }    
 }
+
+int exec_fork(t_env *env)
+{
+    pid_t child;
+
+    child = fork();
+    if (child == 0)
+    {
+        ft_printf("found command\n");
+        //execve();
+    }
+    else if (child < 0)
+    {
+        ft_printf("could not create process\n");
+        printf("%s\n <-- contents of env->input", env->input);
+        return (1);
+    }
+    wait(&child);
+    return (0);
+}
 */
