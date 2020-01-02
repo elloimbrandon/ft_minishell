@@ -149,33 +149,37 @@ void    init_structs(t_env *env, t_cmd *input_check)
 //     }
 //     ft_free_2d(input_copy);
 // }
-static char    *get_input(void)
+
+static char		*get_input(void)
+{
+	char	*buf;
+    char    *temp;
+	int		result;
+
+	buf = ft_strnew(2);
+    temp = ft_strnew(2);
+	while ((result = read(0, buf, 1)) && buf[0] != '\n')
+	{
+		temp = ft_strjoin(temp, buf);
+		if (!temp)
+			temp = ft_strdup(buf);
+		ft_bzero(buf, ft_strlen(buf));
+	}
+    free(buf);
+    return(temp);
+}
+
+void    display_get_input(t_env *env, t_cmd *input_check)
 {
     char *temp;
-    char buf[BUFF + 1];
-    int ret;
 
-    buf[1] = 0;
-    while((ret = read(0, buf, 1)) && buf[0] != '\n')
-    {
-        buf[ret] = '\0';
-        ft_strjoin(temp[0], buf);
-    }
-    //free(str);
- }
-
-void    display_get_input(t_env *env, t_cmd *input_check) // changed from void
-{
-    char *temp;
-
-    temp = NULL;
-    while(!display_prompt() && get_next_line(STDIN_FILENO, &(temp)))
+    temp = NULL;   
+    // while(!display_prompt() && get_next_line(STDIN_FILENO, &(temp)))
+    while(!display_prompt())
     {
         temp = get_input();
-        // display_prompt();
-        // get_next_line(STDIN_FILENO, &(temp));
         //ft_parse_cmd(env, input_check);
-        printf("%s <-- contents of temp\n", temp);
+        printf("%s<-- contents of temp\n", temp);
     }
 }
 
