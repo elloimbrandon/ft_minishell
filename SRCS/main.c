@@ -40,24 +40,6 @@ void    init_structs(t_env *env, t_cmd *input_check)
     input_check->nbr_of_cmds = 0;
 }
 
-// void    handle_cmds(char *input_copy, t_cmd *input_check, t_env *env)
-// {
-//     if(input_check->expansions >= 1)
-//     {   
-//         printf("hit handle_exp func\n");
-//         handle_exp(input_copy, input_check, env);
-//     }
-//     else if(input_check->tilde >= 1)
-//     {
-//         printf("hit handle_tilde func\n");
-//         //handle_tilde(input_copy, input_check);
-//     }
-//     else if(!input_check->expansions && !input_check->tilde)
-//     {
-//         printf("hit exec_cmd function \n");
-//         //exec_cmd(input_copy, input_check);
-//     }
-// }
 
 // void    handle_exp(char *input_copy, t_cmd *input_check, t_env *env)
 // {
@@ -100,31 +82,50 @@ void    init_structs(t_env *env, t_cmd *input_check)
 //     }
 // }
 
-// void    search_input(char *input_copy, t_cmd *input_check)
-// {
-//     if(ft_strrchr(input_copy, '$')) // do the same for qoutes
-//     {
-//         input_check->expansions += 1; // minus one away after execution
-//         printf("its regestering a struct hit for $\n");
-//     }
-//     else if(ft_strchr(input_copy, '~'))
-//         input_check->tilde += 1;  // minus one away after execution
-// }
+void    search_input(char **input_copy, t_cmd *input_check)
+{
+    int i;
 
-// char    **split_by_space(char *input_copy)
-// {
-//     char **ret;
-//     int i;
+    i = -1;
+    while(input_copy[++i])
+    {
+        if(ft_strrchr(input_copy[i], '$')) // do the same for qoutes
+            input_check->expansions += 1; // minus one away after execution so they dont stack
+        else if(ft_strchr(input_copy[i], '~'))
+            input_check->tilde += 1;  // minus one away after execution so they dont stack
+    }
+}
 
-//     i = 0;
-//     while(input_copy[i])
-//     {
-//         ret = ft_strsplit(&input_copy[i], ' ');
-//         i++;
-//     }
-//     free(input_copy);
-//     return(ret);
-// }
+char    **split_by_space(char **input_copy)
+{
+    char **ret;
+    int i;
+
+    i = 0;
+    while(input_copy[i])
+        ret = ft_strsplit(input_copy[i++], ' ');
+    ft_free_2d(input_copy);
+    return(ret);
+}
+
+void    handle_cmds(char *input_copy, t_cmd *input_check, t_env *env)
+{
+    if(input_check->expansions >= 1)
+    {   
+        printf("hit handle_exp func\n");
+        //handle_exp(input_copy, input_check, env);
+    }
+    else if(input_check->tilde >= 1)
+    {
+        printf("hit handle_tilde func\n");
+        //handle_tilde(input_copy, input_check);
+    }
+    else if(!input_check->expansions && !input_check->tilde)
+    {
+        printf("hit exec_cmd func\n");
+        //exec_cmd(input_copy, input_check);
+    }
+}
 
 void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
 {
@@ -132,19 +133,15 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
     char **input_copy;
     int i;
 
-    i = 0;
+    i = -1;
     input_copy = ft_strsplit(env->input, ';');
     free(env->input);
     // if (!input_copy)
-    //     printf("somthings wrong\n");
-    // while(input_copy[i])
-    // {
-    //     input_copy = split_by_space(input_copy[i]);
-    //     search_input(input_copy[i], input_check); // searching for expansions and tilde
-    //     handle_cmds(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
-    //     i++;
-    // }
-    // ft_free_2d(input_copy);
+    input_copy = split_by_space(input_copy); // split 2d array by spaces
+    search_input(input_copy, input_check); // searching for expansions and tilde
+    while(input_copy[++i])
+        handle_cmds(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
+    ft_free_2d(input_copy);
 }
 
 static char		*get_input(void)
@@ -171,7 +168,7 @@ void    display_get_input(t_env *env, t_cmd *input_check)
     while(!display_prompt())
     {
         env->input = get_input();
-        printf("%s<-- contents of env->input\n", env->input);
+        //printf("%s<-- contents of env->input\n", env->input);
         ft_parse_cmd(env, input_check);
     }
 }
