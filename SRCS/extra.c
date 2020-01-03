@@ -1,5 +1,30 @@
  
  /*
+
+ void    find_env_var(char *temp, t_env *env) <----- OLD
+{
+    int i;
+    int len;
+
+    i = 0;
+    len = ft_strlen(temp);
+    while(env->env_copy[i])
+    {
+        if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
+        {
+            printf("%s <-- old env name\n", env->env_copy[i]); // prints old env value!!
+            //len += ft_strlen(env->env_copy[i]);
+            //env->output = ft_memalloc(sizeof(char *) + len);
+            env->output = ft_memalloc(sizeof(char *));
+            env->output = ft_strcpy(env->output, temp);
+            ft_strdel(&env->env_copy[i]);
+            env->env_copy[i] = ft_strdup(env->output);
+            //ft_strcat(env->output, env->env_copy[i]); // also handle if the strings are the same then dont replace
+        }
+        i++;
+    }
+}
+
  void    **find_path(t_env *env) 
     int i;
 

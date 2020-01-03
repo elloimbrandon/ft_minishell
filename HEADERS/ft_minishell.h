@@ -36,6 +36,7 @@ typedef struct		s_env
     char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
     char            *output;
+    int             solo_exp;
 }					t_env;
 
 typedef struct      s_cmd // think of multiple and path for cd ls commands 
