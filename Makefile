@@ -1,4 +1,4 @@
-SRCS = ./SRCS/main.c ./SRCS/ft_signal.c
+SRCS = ./SRCS/main.c ./SRCS/ft_signal.c ./SRCS/ft_mini_init.c ./SRCS/ft_mini_tools.c ./SRCS/exp_tild_handles.c
 
 NAME = minishell
 
