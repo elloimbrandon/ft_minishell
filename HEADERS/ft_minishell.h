@@ -47,8 +47,8 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
     int             set_e; // set global env var
     int             unset_e; // unset global env var
     int             qoutes; // (has to equal 2) if theirs "  " for use of sentences for cat and echo
-    int             tilde; // for use of home dir
-    int             expansions; // number of found $ for expansions
+    unsigned int    tilde; // for use of home dir
+    unsigned int    expansions; // number of found $ for expansions
     int             nbr_of_cmds; // number of total commands
 }                   t_cmd;
 
@@ -56,23 +56,24 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
 ** Functions
 */
 
-void        sigint_handler(int sig_num);
-void        sigquit_handler(int sig_num);
+void            sigint_handler(int sig_num);
+void            sigquit_handler(int sig_num);
 static char		*get_input(void);
-void        ft_hello(void);
-int         display_prompt(void);
-void		init_structs(t_env *env, t_cmd *input_check);
-void        display_get_input(t_env *env, t_cmd *input_check);
-void        init_input_check(t_cmd *input_check);
-void        ft_parse_cmd(t_env *env, t_cmd *input_check);
+void            ft_hello(void);
+int             display_prompt(void);
+void		    init_structs(t_env *env, t_cmd *input_check);
+void            display_get_input(t_env *env, t_cmd *input_check);
+void            init_input_check(t_cmd *input_check);
+void            ft_parse_cmd(t_env *env, t_cmd *input_check);
+void            search_input(char **input_copy, t_cmd *input_check);
+char            **split_by_space(char **input_copy);
+void            handle_cmds(char *input_copy, t_cmd *input_check, t_env *env);
+void            handle_exp(char *input_copy, t_cmd *input_check, t_env *env);
+void            find_env_var(char *temp, t_env *env); 
 
 // testing these functions
-
+void        get_home_path(char *temp, t_env *env);
+void        handle_tilde(char *input_copy, t_cmd *input_check, t_env *env);
 int         exec_fork(t_env *env);
-char        **split_by_space(char **input_copy);
-void        search_input(char **input_copy, t_cmd *input_check);
-void        handle_cmds(char *input_copy, t_cmd *input_check, t_env *env);
-void        handle_exp(char *input_copy, t_cmd *input_check, t_env *env);
-void        find_env_var(char *temp, t_env *env);
 
 #endif

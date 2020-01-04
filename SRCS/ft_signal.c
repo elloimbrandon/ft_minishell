@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/01 15:50:16 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/03 22:38:58 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ int    display_prompt(void)
     return(0);
 }
 
+/*
+** sig number returned for cntl-c to interupt the program process
+*/
+
 void    sigint_handler(int sig_num)
 {
     (void)sig_num; 
@@ -33,11 +37,19 @@ void    sigint_handler(int sig_num)
     display_prompt();
 }
 
+/*
+** sig number to completely exit the program and kill process
+*/
+
 void    sigquit_handler(int sig_num)
 {
     ft_printf("\n%sGoodbye!\n", KMAG);
     exit(1);
 }
+
+/*
+** hello message you receive when you start the program
+*/
 
 void    ft_hello(void)
 {
