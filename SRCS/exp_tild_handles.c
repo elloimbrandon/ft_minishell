@@ -6,14 +6,14 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/03 23:57:23 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/04 00:30:48 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> ////////// REMOVEEEEEEEEEEEEE
 
-void    handle_cmds(char *input_copy, t_cmd *input_check, t_env *env)
+void    handle_exp_tilde(char *input_copy, t_cmd *input_check, t_env *env)
 {
     if(input_check->expansions >= 1)
     {
@@ -28,11 +28,6 @@ void    handle_cmds(char *input_copy, t_cmd *input_check, t_env *env)
         handle_tilde(input_copy, input_check, env);
         input_check->tilde--;
         printf("%s <-- output str for tilde\n", env->output);
-    }
-    else if(!input_check->expansions && !input_check->tilde)
-    {
-        printf("hit exec_cmd func\n");
-        //exec_cmd(input_copy, input_check);
     }
 }
 
