@@ -58,6 +58,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
 
 void        sigint_handler(int sig_num);
 void        sigquit_handler(int sig_num);
+static char		*get_input(void);
 void        ft_hello(void);
 int         display_prompt(void);
 void		init_structs(t_env *env, t_cmd *input_check);
@@ -66,6 +67,7 @@ void        init_input_check(t_cmd *input_check);
 void        ft_parse_cmd(t_env *env, t_cmd *input_check);
 
 // testing these functions
+
 int         exec_fork(t_env *env);
 char        **split_by_space(char **input_copy);
 void        search_input(char **input_copy, t_cmd *input_check);

@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/02 22:10:32 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/03 21:36:10 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,41 +157,38 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
     ft_free_2d(input_copy);
 }
 
-static char		*get_input(void)
+static char		*get_input(void) // changed from static
 {
 	char	*buf;
     char    *temp;
 	int		result;
 
-	buf = ft_strnew(1);
-    temp = ft_strnew(1);
-    buf[1] = 0;
-	while ((result = read(0, buf, 1)) && buf[0] != '\n')
+    buf = ft_memalloc(sizeof(char*));
+    temp = ft_memalloc(sizeof(char*));
+	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
 	{
         temp = ft_strjoin(temp, buf);
-		//if (!temp)
-			//temp = ft_strdup(buf); // might not need these 2 lines
-		ft_bzero(buf, ft_strlen(buf));
+        if (!temp)
+			temp = ft_strdup(buf);
+        ft_strclr(buf);
 	}
-    // if(buf[0] == '\n') // allows you to press enter EOF but wont parse_cmd and store input
-    // {
-    //     free(buf);
-    //     return(0);
-    // }
+    if(buf[0] == '\n')
+        temp[0] = *ft_strjoin(temp, buf); // works?? 
     free(buf);
     return(temp);
 }
 
 void    display_get_input(t_env *env, t_cmd *input_check)
 {  
+    // while(((!display_prompt()) && (env->input[0] = *get_input()) != '\n'))
     while(!display_prompt())
     {
         env->input = get_input();
-        // if(!env->input)
-        //     continue ;
+        // if(env->input[0] == '\n')
         // else
         if(env->input)
             ft_parse_cmd(env, input_check); /// seg faults on ctrl-d and with space now
+        ft_strclr(env->input);
     }
 }
 
