@@ -32,6 +32,7 @@ void    init_structs(t_env *env, t_cmd *input_check)
     input_check->exit = 0;
     input_check->cd = 0;
     input_check->env = 0;
+    input_check->pwd = 0;
     input_check->set_e = 0;
     input_check->unset_e = 0;
     input_check->qoutes = 0;

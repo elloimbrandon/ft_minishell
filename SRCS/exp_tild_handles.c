@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/04 00:30:48 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/04 16:05:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void    find_env_var(char *temp, t_env *env)
             }
             env->output = ft_strdup(temp);
             ft_strdel(&env->env_copy[i]);
-            env->env_copy[i] = ft_strdup(env->output);
+            env->env_copy[i] = ft_strdup(env->output); // maybe only do this if the set_env commmand is called
         }
     }
 }
