@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/04 16:05:13 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/07 21:23:37 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,13 @@ void    handle_exp_tilde(char *input_copy, t_cmd *input_check, t_env *env)
 {
     if(input_check->expansions >= 1)
     {
-        printf("hit handle_exp func\n");
-        handle_exp(input_copy, input_check, env);
+        handle_env(input_copy, input_check, env);
         input_check->expansions--;
-        printf("%s <-- output str for exp\n", env->output);
     }
     else if(input_check->tilde >= 1)
     {
-        printf("hit handle_tilde func\n");
         handle_tilde(input_copy, input_check, env);
         input_check->tilde--;
-        printf("%s <-- output str for tilde\n", env->output);
     }
 }
 
@@ -57,12 +53,12 @@ void    get_home_path(char *temp, t_env *env)
     while(env->env_copy[++i])
     {
         if (strncmp("HOME=", env->env_copy[i], 5) == 0)
-        temp = ft_strdup(env->env_copy[i] + 5); // or try ft_strndup
+        temp = ft_strdup(env->env_copy[i] + 5);
         env->output = ft_strdup(temp);
     }
 }
 
-void    handle_exp(char *input_copy, t_cmd *input_check, t_env *env)
+void    handle_env(char *input_copy, t_cmd *input_check, t_env *env)
 {
     char *temp;
     int i;
@@ -72,19 +68,17 @@ void    handle_exp(char *input_copy, t_cmd *input_check, t_env *env)
     {
         if(ft_strrchr(input_copy, '$'))
         {
-            if(!ft_strrchr(input_copy, '='))
-                env->solo_exp += 1;
             ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
             temp = ft_strdup(input_copy);
-            if(env->solo_exp)
+            if(!input_check->set_e)
                 temp = ft_strcat(temp, "=");
-            find_env_var(temp, env);
+            find_env_var(temp, input_check, env);
             free(temp);
         }
     }
 }
 
-void    find_env_var(char *temp, t_env *env)
+void    find_env_var(char *temp, t_cmd *input_check, t_env *env)
 {
     int i;
     int len;
@@ -93,20 +87,17 @@ void    find_env_var(char *temp, t_env *env)
     len = ft_strlen(temp);
     while(env->env_copy[++i])
     {
-        if(ft_strccmp(temp, env->env_copy[i], '=') == 0) // might not need 
+        if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
         {
-            if(ft_strcmp(temp, env->env_copy[i]) == 0) // if the env values are the same change nothing
-                break ;
-            if(!env->solo_exp && temp[len -= 1] == '=') // if the command isnt just $USER and it had '=' at the end dont change value
-                break ;
-            if(env->solo_exp)
+            if(input_check->set_e >= 1) // checking for setenv
             {
-                temp = ft_strdup(env->env_copy[i]);
-                env->solo_exp = 0;
+                env->output = ft_strdup(temp);
+                ft_strdel(&env->env_copy[i]);
+                env->env_copy[i] = ft_strdup(env->output);
+                input_check->set_e = 0;
             }
-            env->output = ft_strdup(temp);
-            ft_strdel(&env->env_copy[i]);
-            env->env_copy[i] = ft_strdup(env->output); // maybe only do this if the set_env commmand is called
+            else
+                env->output = ft_strdup(env->env_copy[i] + len);
         }
     }
 }

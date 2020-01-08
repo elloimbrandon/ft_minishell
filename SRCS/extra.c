@@ -25,16 +25,48 @@
     }
 }
 
- void    **find_path(t_env *env) 
+void    ft_which_cmd(char **path, t_env *env)
+{
     int i;
+    char *temp;
 
-    i= 0;
-    while(env->env_copy[i])
+    i = 0;
+    temp = ft_memalloc(sizeof(char *));
+    while(path[i])
     {
-        if(ft_strcmp(env->cmd_copy, "PATH") == 0)
-            return (ft_strsplit(env->env_copy, ':'));
+        if(ft_strcmp(path[i], env->input) == 0)
+            env->output = ft_strdup(path[i]);
         i++;
     }
+}
+
+void    check_commands(char *input_copy, t_cmd *input_check, t_env *env)
+{
+
+    // maybe check and see if tilde and expansions are 0?
+
+    if (!input_check->expansions && !input_check->tilde) // i might have to figure out what to do with the output string with other cmmds id their is exp-tilde
+    {
+        printf("its a system command\n");
+        check_sys_cmd(input_copy, input_check, env);
+    }
+}
+
+char    *find_path(char *path, t_env *env)
+{
+    int i;
+
+    i = 0;
+    while(env->env_copy[i])
+    {
+        if(ft_strcmp(env->env_copy[i], "PATH") == 0)
+        {
+            printf("%s <-- found path\n", env->env_copy[i]);
+            return (ft_strsplit(env->env_copy[i], ':'));
+        }
+        i++;
+    }
+    printf("didnt find path\n");
     return(ft_strsplit("", ';'));
 }
 
