@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/03 22:35:32 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/07 21:22:10 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,22 @@ char    **split_by_space(char **input_copy)
 ** modify the output later accordingly
 */
 
-void    search_input(char **input_copy, t_cmd *input_check)
+void     search_input(char *input_copy, t_cmd *input_check)
 {
-    int i;
-
-    i = -1;
-    while(input_copy[++i])
-    {
-        if(ft_strrchr(input_copy[i], '$')) // do the same for qoutes
-            input_check->expansions += 1; // minus one away after execution so they dont stack
-        else if(ft_strchr(input_copy[i], '~'))
-            input_check->tilde += 1;  // minus one away after execution so they dont stack
-    }
+    if (ft_strcmp(input_copy, "cd") == 0)
+        input_check->cd += 1;
+    else if (ft_strcmp(input_copy, "env") == 0)
+        input_check->env += 1;
+    else if (ft_strcmp(input_copy, "exit") == 0)
+        input_check->exit += 1;
+    else if (ft_strcmp(input_copy, "pwd") == 0)
+        input_check->pwd += 1;
+    else if (ft_strcmp(input_copy, "setenv") == 0)
+        input_check->set_e += 1;
+    else if (ft_strcmp(input_copy, "unsetenv") == 0)
+        input_check->unset_e += 1;
+    else if(ft_strrchr(input_copy, '$')) // do the same for qoutes
+        input_check->expansions += 1; // minus one away after execution so they dont stack
+    else if(ft_strchr(input_copy, '~'))
+        input_check->tilde += 1;  // minus one away after execution so they dont stack
 }

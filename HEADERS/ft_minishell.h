@@ -67,15 +67,15 @@ void		    init_structs(t_env *env, t_cmd *input_check);
 void            display_get_input(t_env *env, t_cmd *input_check);
 void            init_input_check(t_cmd *input_check);
 void            ft_parse_cmd(t_env *env, t_cmd *input_check);
-void            search_input(char **input_copy, t_cmd *input_check);
+void            search_input(char *input_copy, t_cmd *input_check);
 char            **split_by_space(char **input_copy);
 void            handle_exp_tilde(char *input_copy, t_cmd *input_check, t_env *env);
-void            handle_exp(char *input_copy, t_cmd *input_check, t_env *env);
-void            find_env_var(char *temp, t_env *env); 
+void            handle_env(char *input_copy, t_cmd *input_check, t_env *env);
+void            find_env_var(char *temp, t_cmd *input_check, t_env *env); 
 
 // testing these functions
 void        ft_which_cmd(char **path, t_env *env);
-char        **find_path(char **path, t_env *env);
+char        *find_path(char *path, t_env *env);
 void        check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env);
 void        check_commands(char *input_copy, t_cmd *input_check, t_env *env);
 void        get_home_path(char *temp, t_env *env);
