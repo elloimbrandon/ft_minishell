@@ -6,17 +6,63 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/07 21:41:21 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/07 22:50:24 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> /////////////////// REMOVE
 
-static void    check_bultin(char *input_copy, t_cmd *input_check, t_env *env)
+static char     *find_home(t_env *env)
+{
+    int i;
+
+    i = -1;
+    while(env->env_copy[++i])
+    {
+        if (strncmp("HOME=", env->env_copy[i], 5) == 0)
+            return(ft_strdup(env->env_copy[i] + 5));
+    }
+    return(0);
+}
+
+static char     *find_old_pwd(t_env *env)
+{
+    int i;
+
+    i = -1;
+    while(env->env_copy[++i])
+    {
+        if (strncmp("OLDPWD=", env->env_copy[i],7) == 0)
+            return(ft_strdup(env->env_copy[i] + 7));
+    }
+    return(0);
+}
+
+static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need to testy test
+{
+    char *temp;
+
+    temp = ft_memalloc(sizeof(char*));
+    if(!input_copy[1]) //|| (ft_strcmp(input_copy[i], "--") == 0))
+    {
+        temp = find_home(env);
+        chdir(temp);
+        free(temp);
+    }
+    else if (ft_strcmp(input_copy[1], "..") == 0) // maybe change??
+    {
+        temp = find_old_pwd(env);
+        chdir(temp);
+        ft_printf("%s\n", temp);
+        free(temp);
+    }      
+}
+
+static void    check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(input_check->cd >= 1)
-        printf("hit cd\n");
+        ft_cd(input_copy, input_check, env);
     if(input_check->env >= 1)
         printf("hit env\n");
     if(input_check->exit >= 1)
@@ -50,10 +96,9 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
             input_copy[i] = ft_strdup(env->output);
             free(env->output);
         }
-        check_bultin(input_copy[i], input_check, env);
-        //check_sys_cmd(input_copy[i], input_check, env);
-        printf("%s <--- command\n", input_copy[i]);
+        //check_bultin(input_copy, input_check, env);
     }
+    check_bultin(input_copy, input_check, env);
     //printf("%s <-- output\n", env->output);
     ft_free_2d(input_copy);
 }
