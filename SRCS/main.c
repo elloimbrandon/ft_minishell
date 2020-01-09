@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 01:29:30 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/09 03:54:19 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char    *get_path(char *temp, t_env *env)
     return(temp);
 }
 
-static void    print_errors(char *input_copy, t_cmd *input_check, int i)
+static void    print_errors(char *input_copy, int i)
 {
     if (i == 1)
         ft_printf("cd: no such file or directory: %s\n", input_copy);
@@ -38,7 +38,6 @@ static void    print_errors(char *input_copy, t_cmd *input_check, int i)
         ft_printf("cd: many arguments\n");
     else if (i == 4)
         ft_printf("cd: string not in pwd: %s\n", input_copy);
-    input_check->printed_errors++;
 }
 
 static void     ft_print_2d(char **two_d)
@@ -85,9 +84,9 @@ static void     check_cd_dir(char **input_copy, t_cmd *input_check)
     if (!(dir = opendir(input_copy[1])))
     {
         if (S_ISREG(sbuf.st_mode))
-            print_errors(input_copy[1], input_check, 2);
+            print_errors(input_copy[1], 2);
         else if (!S_ISREG(sbuf.st_mode))
-            print_errors(input_copy[1], input_check, 1);
+            print_errors(input_copy[1], 1);
     }
     else
         chdir(input_copy[1]);
@@ -98,7 +97,7 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     char *temp;
 
     temp = ft_memalloc(sizeof(char*));
-    if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0)
+    if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0) //split into 2 maybe
     {
         temp = find_home(env);
         chdir(temp);
@@ -113,8 +112,13 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     }
     else if(input_copy[1] && !input_copy[2])
         check_cd_dir(input_copy, input_check);
-    // else if(input_copy[2] || input_copy[3])
-    //     print_errors(input_copy[1], input_check, 3);
+    else if(input_copy[2] && !input_copy[3])
+        print_errors(input_copy[1], 4);
+    else if(input_copy[3] && !input_copy[4])
+        print_errors(input_copy[1], 3);
+    else
+        print_errors(input_copy[1], 3);
+
 }
 
 static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
@@ -155,10 +159,11 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
             input_copy[i] = ft_strdup(env->output);
             free(env->output);
         }
-        check_bultin(input_copy, input_check, env);
+        //check_bultin(input_copy, input_check, env);
     }
+    check_bultin(input_copy, input_check, env);
     //printf("%s <-- output\n", env->output);
-    ft_free_2d(input_copy);
+    //ft_free_2d(input_copy);
 }
 
 // void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
