@@ -124,16 +124,10 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
 
 void    print_path(t_env *env)
 {
-    int i;
-
-    i = -1;
-    while(env->env_copy[++i])
-    {
-        if (strncmp("PWD=", env->env_copy[i], 4) == 0)
-            printf("%s\n", env->env_copy[i] + 4);
-        //temp = ft_strdup(temp);
-    }
-    //return(temp);
+    char display[BUFF + 1];
+    
+    getcwd(display, BUFF);
+    ft_printf("%s\n", display);
 }
 
 static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
