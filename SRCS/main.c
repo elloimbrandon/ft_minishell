@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 04:09:57 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/09 13:04:20 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,32 @@
 #include <stdio.h> /////////////////// REMOVE
 
 
-static char    *get_path(char *temp, t_env *env)
-{
-    int i;
+// static char    *get_path(char *temp, t_env *env)
+// {
+//     int i;
 
-    i = -1;
-    while(env->env_copy[++i])
-    {
-        if (strncmp("PATH=", env->env_copy[i], 5) == 0)
-        temp = ft_strdup(env->env_copy[i] + 5);
-        temp = ft_strdup(temp);
-    }
-    return(temp);
-}
+//     i = -1;
+//     while(env->env_copy[++i])
+//     {
+//         if (strncmp("PATH=", env->env_copy[i], 5) == 0)
+//         temp = ft_strdup(env->env_copy[i] + 5);
+//         temp = ft_strdup(temp);
+//     }
+//     return(temp);
+// }
 
-static void    print_errors(char *input_copy, int i)
+static void    print_errors(char *input_copy, t_cmd *input_check, int i)
 {
     if (i == 1)
         ft_printf("cd: no such file or directory: %s\n", input_copy);
     else if (i == 2)
         ft_printf("cd: not a directory: %s\n", input_copy);
     else if (i == 3)
-        ft_printf("cd: many arguments\n");
+        ft_printf("cd: too many arguments\n");
     else if (i == 4)
         ft_printf("cd: string not in pwd: %s\n", input_copy);
+    input_check->printed_errors++;
+    
 }
 
 static void     ft_print_2d(char **two_d)
@@ -84,9 +86,9 @@ static void     check_cd_dir(char **input_copy, t_cmd *input_check)
     if (!(dir = opendir(input_copy[1])))
     {
         if (S_ISREG(sbuf.st_mode))
-            print_errors(input_copy[1], 2);
+            print_errors(input_copy[1], input_check, 2);
         else if (!S_ISREG(sbuf.st_mode))
-            print_errors(input_copy[1], 1);
+            print_errors(input_copy[1], input_check, 1);
     }
     else
         chdir(input_copy[1]);
@@ -97,7 +99,6 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     char *temp;
 
     temp = ft_memalloc(sizeof(char*));
-    // handle dash function??
     if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0) //split into 2 maybe
     {
         temp = find_home(env);
@@ -114,29 +115,54 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     else if(input_copy[1] && !input_copy[2])
         check_cd_dir(input_copy, input_check);
     else if(input_copy[2] && !input_copy[3])
-        print_errors(input_copy[1], 4);
+        print_errors(input_copy[1], input_check, 4);
     else if(input_copy[3] && !input_copy[4])
-        print_errors(input_copy[1], 3);
+        print_errors(input_copy[1], input_check, 3);
     else
-        print_errors(input_copy[1], 3);
+        print_errors(input_copy[1], input_check, 3);
+}
+
+void    print_path(t_env *env)
+{
+    int i;
+
+    i = -1;
+    while(env->env_copy[++i])
+    {
+        if (strncmp("PWD=", env->env_copy[i], 4) == 0)
+            printf("%s\n", env->env_copy[i] + 4);
+        //temp = ft_strdup(temp);
+    }
+    //return(temp);
 }
 
 static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    if(strcmp(input_copy[0], "cd") == 0)
+    if(ft_strcmp(input_copy[0], "cd") == 0)
         ft_cd(input_copy,input_check, env);
 }
 
 static void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    if(strcmp(input_copy[0], "env") == 0)
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
         ft_print_2d(env->env_copy);
+    else if (input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
+        ft_printf("env: %s: No such file or directory\n", input_copy[1]);
+}
+
+static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "pwd") == 0)
+        print_path(env);
+    else if(!input_check->printed_errors && ft_strcmp(input_copy[0], "pwd") == 0)
+        ft_printf("pwd: too many arguments\n");
 }
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
+    check_pwd_cmd(input_copy, input_check, env);
 }
 
 void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
@@ -160,6 +186,7 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
             free(env->output);
         }
     }
+    input_check->printed_errors = 0;
     check_bultin(input_copy, input_check, env);
     //free 2d somewhere
 }
