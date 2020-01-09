@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/07 17:40:00 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/08 19:32:39 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@ void    init_structs(t_env *env, t_cmd *input_check)
     input_check->tilde = 0;
     input_check->expansions = 0;
     input_check->nbr_of_cmds = 0;
+    input_check->printed_errors = 0;
 }
