@@ -1,6 +1,7 @@
 #ifndef FT_MINISHELL_H
 # define FT_MINISHELL_H
 # include "../libft/libft.h"
+# include <dirent.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/stat.h>
@@ -52,6 +53,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
     unsigned int    tilde; // for use of home dir
     unsigned int    expansions; // number of found $ for expansions
     int             nbr_of_cmds; // number of total commands
+    int             printed_errors;
 }                   t_cmd;
 
 /*

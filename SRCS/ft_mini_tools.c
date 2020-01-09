@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/07 21:22:10 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/09 00:31:59 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,13 @@ char    **split_by_space(char **input_copy)
 ** modify the output later accordingly
 */
 
-void     search_input(char *input_copy, t_cmd *input_check)
+void     search_input(char *input_copy, t_cmd *input_check)  // do the same for qoutes
 {
-    if (ft_strcmp(input_copy, "cd") == 0)
+    if (ft_strrchr(input_copy, '$'))
+        input_check->expansions += 1;
+    else if (ft_strchr(input_copy, '~'))
+        input_check->tilde += 1;
+    else if (ft_strcmp(input_copy, "cd") == 0)
         input_check->cd += 1;
     else if (ft_strcmp(input_copy, "env") == 0)
         input_check->env += 1;
@@ -49,8 +53,4 @@ void     search_input(char *input_copy, t_cmd *input_check)
         input_check->set_e += 1;
     else if (ft_strcmp(input_copy, "unsetenv") == 0)
         input_check->unset_e += 1;
-    else if(ft_strrchr(input_copy, '$')) // do the same for qoutes
-        input_check->expansions += 1; // minus one away after execution so they dont stack
-    else if(ft_strchr(input_copy, '~'))
-        input_check->tilde += 1;  // minus one away after execution so they dont stack
 }
