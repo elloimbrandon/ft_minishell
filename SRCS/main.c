@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 03:54:19 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/09 04:09:57 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     char *temp;
 
     temp = ft_memalloc(sizeof(char*));
+    // handle dash function??
     if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0) //split into 2 maybe
     {
         temp = find_home(env);
@@ -118,12 +119,10 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
         print_errors(input_copy[1], 3);
     else
         print_errors(input_copy[1], 3);
-
 }
 
 static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    //if (input_check->cd == 1) // && !input_check->printed_errors) // need to have env vars update
     if(strcmp(input_copy[0], "cd") == 0)
         ft_cd(input_copy,input_check, env);
 }
@@ -140,7 +139,7 @@ static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
     check_env_cmd(input_copy, input_check, env);
 }
 
-void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes // output might have to be a 2d array
+void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
 {
    
     char **input_copy;
@@ -155,15 +154,14 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
         search_input(input_copy[i], input_check);
         if(input_check->expansions >= 1 || input_check->tilde >= 1)
         {
-            handle_exp_tilde(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
+            handle_exp_tilde(input_copy[i], input_check, env);
             input_copy[i] = ft_strdup(env->output);
+            ft_printf("%s\n", input_copy[i]); /// experiment // cant use with other commands
             free(env->output);
         }
-        //check_bultin(input_copy, input_check, env);
     }
     check_bultin(input_copy, input_check, env);
-    //printf("%s <-- output\n", env->output);
-    //ft_free_2d(input_copy);
+    //free 2d somewhere
 }
 
 // void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
@@ -233,19 +231,3 @@ int        main(void)
     display_get_input(env, input_check);
     return(0);
 }
-
-// int        main(void)
-// {
-//     t_env   *env;
-
-//     env = ft_memalloc(sizeof(t_env));
-//     init_struct(env);
-//     int i = 0;
-//     while(env->env_copy[i])
-//     {
-//         printf("%s", env->env_copy[i]);
-//         printf("\n");
-//         i++;
-//     }
-//     return(0);
-// }
