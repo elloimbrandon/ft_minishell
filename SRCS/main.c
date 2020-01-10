@@ -6,27 +6,28 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 01:29:30 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/09 13:04:20 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> /////////////////// REMOVE
 
+///////////////////use csh
 
-static char    *get_path(char *temp, t_env *env)
-{
-    int i;
+// static char    *get_path(char *temp, t_env *env)
+// {
+//     int i;
 
-    i = -1;
-    while(env->env_copy[++i])
-    {
-        if (strncmp("PATH=", env->env_copy[i], 5) == 0)
-        temp = ft_strdup(env->env_copy[i] + 5);
-        temp = ft_strdup(temp);
-    }
-    return(temp);
-}
+//     i = -1;
+//     while(env->env_copy[++i])
+//     {
+//         if (strncmp("PATH=", env->env_copy[i], 5) == 0)
+//         temp = ft_strdup(env->env_copy[i] + 5);
+//         temp = ft_strdup(temp);
+//     }
+//     return(temp);
+// }
 
 static void    print_errors(char *input_copy, t_cmd *input_check, int i)
 {
@@ -35,10 +36,11 @@ static void    print_errors(char *input_copy, t_cmd *input_check, int i)
     else if (i == 2)
         ft_printf("cd: not a directory: %s\n", input_copy);
     else if (i == 3)
-        ft_printf("cd: many arguments\n");
+        ft_printf("cd: too many arguments\n");
     else if (i == 4)
         ft_printf("cd: string not in pwd: %s\n", input_copy);
     input_check->printed_errors++;
+    
 }
 
 static void     ft_print_2d(char **two_d)
@@ -98,7 +100,7 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     char *temp;
 
     temp = ft_memalloc(sizeof(char*));
-    if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0)
+    if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0) //split into 2 maybe
     {
         temp = find_home(env);
         chdir(temp);
@@ -113,30 +115,158 @@ static void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env) // need
     }
     else if(input_copy[1] && !input_copy[2])
         check_cd_dir(input_copy, input_check);
-    // else if(input_copy[2] || input_copy[3])
-    //     print_errors(input_copy[1], input_check, 3);
+    else if(input_copy[2] && !input_copy[3])
+        print_errors(input_copy[1], input_check, 4);
+    else if(input_copy[3] && !input_copy[4])
+        print_errors(input_copy[1], input_check, 3);
+    else
+        print_errors(input_copy[1], input_check, 3);
+}
+
+void    print_path(t_env *env)
+{
+    char display[BUFF + 1];
+    
+    getcwd(display, BUFF);
+    ft_printf("%s\n", display);
 }
 
 static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    //if (input_check->cd == 1) // && !input_check->printed_errors) // need to have env vars update
-    if(strcmp(input_copy[0], "cd") == 0)
+    if(ft_strcmp(input_copy[0], "cd") == 0)
         ft_cd(input_copy,input_check, env);
+}
+
+static void     check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(ft_strcmp(input_copy[0], "exit") == 0)
+    {
+        ft_printf("%sGoodbye!\n", KMAG);
+        exit(1);
+    }
 }
 
 static void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    if(strcmp(input_copy[0], "env") == 0)
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
         ft_print_2d(env->env_copy);
+    else if (input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
+        ft_printf("env: %s: No such file or directory\n", input_copy[1]);
+}
+
+static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "pwd") == 0)
+        print_path(env);
+    else if(!input_check->printed_errors && ft_strcmp(input_copy[0], "pwd") == 0)
+        ft_printf("pwd: too many arguments\n");
+}
+
+// static void     ft_remove_qoutes(char **input_copy, t_cmd *input_check)
+// {
+//     int i;
+//     int k;
+
+//     i = 0;
+//     k = 0;
+//     while(input_copy[++i])
+//     {
+//         while(input_copy[i][k])
+//         {
+//             if(input_copy[i][k] != '"')
+//                 ft_printf("%c", input_copy[i][k]);
+//             if (input_copy[i + 1])
+//                 ft_printf(" ");
+//             k++;
+//         }
+//         //if (input_copy[i + 1])
+//             //ft_printf(" ");
+//     }
+// }
+static void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
+{
+    int k;
+
+    k = 0;
+    while(input_copy[k])
+    {
+        if(input_copy[k] != '"')
+            ft_printf("%c", input_copy[k]);
+        k++;
+    }
+}
+static void     ft_print_echo(char **input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = 0;
+    while(input_copy[++i])
+    {
+        if(input_check->qoutes)
+            ft_remove_qoutes(input_copy[i], input_check);
+        if (!input_check->qoutes)
+            ft_printf("%s", input_copy[i]);
+        if (input_copy[i + 1])
+            ft_printf(" ");
+    }
+    printf("\n");
+}
+
+static void     handle_qoutes(char **input_copy, t_cmd *input_check)
+{
+    int i;
+    int k;
+
+    i = -1;
+    k = 0;
+    while(input_copy[++i])
+    {
+        while(input_copy[i][k])
+            k++;
+    }
+    k--;
+    i--;
+    if(input_copy[i][k] == '"')
+    {
+        input_check->qoutes = 1;
+        ft_print_echo(input_copy, input_check);
+    }
+    else
+        ft_printf("echo: Unmatched \" \" \n");
+    // ft_printf("echo: Unmatched " " \n");
+}
+
+static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
+        printf("\n");
+    else if (input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0 && input_copy[1][0] == '"')
+    {
+        if(input_copy[1][0] == '"')
+            handle_qoutes(input_copy, input_check);
+        else
+            ft_print_echo(input_copy, input_check);
+
+    }
+    else if(input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
+        ft_print_echo(input_copy, input_check);
+        //ft_print_2d(input_copy);
+    // if you find one quote[1], go thru rest of the string to see if theirs another
+    // if there isnt print dquote>\n and hold the whole string until another qoute is found
+    // else just printf whatever the input was  
+
 }
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
+    check_pwd_cmd(input_copy, input_check, env);
+    check_exit_cmd(input_copy, input_check, env);
+    check_echo_cmd(input_copy, input_check, env);
 }
 
-void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes // output might have to be a 2d array
+void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
 {
    
     char **input_copy;
@@ -151,14 +281,16 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
         search_input(input_copy[i], input_check);
         if(input_check->expansions >= 1 || input_check->tilde >= 1)
         {
-            handle_exp_tilde(input_copy[i], input_check, env); // add a check for struct 1d after expansion handle
+            handle_exp_tilde(input_copy[i], input_check, env);
             input_copy[i] = ft_strdup(env->output);
+            ft_printf("%s\n", input_copy[i]); /// experiment // cant use with other commands
             free(env->output);
         }
-        check_bultin(input_copy, input_check, env);
     }
-    //printf("%s <-- output\n", env->output);
-    ft_free_2d(input_copy);
+    input_check->qoutes = 0;
+    input_check->printed_errors = 0;
+    check_bultin(input_copy, input_check, env);
+    //free 2d somewhere possibly?
 }
 
 // void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
@@ -228,19 +360,3 @@ int        main(void)
     display_get_input(env, input_check);
     return(0);
 }
-
-// int        main(void)
-// {
-//     t_env   *env;
-
-//     env = ft_memalloc(sizeof(t_env));
-//     init_struct(env);
-//     int i = 0;
-//     while(env->env_copy[i])
-//     {
-//         printf("%s", env->env_copy[i]);
-//         printf("\n");
-//         i++;
-//     }
-//     return(0);
-// }
