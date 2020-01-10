@@ -13,6 +13,7 @@
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> /////////////////// REMOVE
 
+///////////////////use csh
 
 // static char    *get_path(char *temp, t_env *env)
 // {
@@ -136,6 +137,15 @@ static void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_cd(input_copy,input_check, env);
 }
 
+static void     check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(ft_strcmp(input_copy[0], "exit") == 0)
+    {
+        ft_printf("%sGoodbye!\n", KMAG);
+        exit(1);
+    }
+}
+
 static void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
@@ -152,11 +162,64 @@ static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_printf("pwd: too many arguments\n");
 }
 
+static void     ft_print_echo(char **input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = 0;
+    while(input_copy[++i])
+    {
+        if(input_check->qoutes)
+        /// take qoutes out and print normally and minus the count
+        else if (!input_check->qoutes)
+            ft_printf("%s ", input_copy[i]);
+        else if (input_copy[i + 1])
+            ft_printf(" ");
+    }
+    printf("\n");
+}
+
+static void     handle_qoutes(char **input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = 1;
+    while(*input_copy[i] && *input_copy[i] != '"')
+        i++;
+    if(*input_copy[i] == '"')
+    {
+        input_check->qoutes = 1;
+        ft_print_echo(input_copy, input_check);
+    }
+    else
+        ft_printf("echo: Unmatched " " \n");
+}
+
+static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
+        printf("\n");
+    else if (input_copy[1] && !input_copy[2])
+    {
+        if(input_copy[1][0] == '"')
+            handle_qoutes(input_copy, input_check);
+    }
+    else if(input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
+        ft_print_echo(input_copy, input_check);
+        //ft_print_2d(input_copy);
+    // if you find one quote[1], go thru rest of the string to see if theirs another
+    // if there isnt print dquote>\n and hold the whole string until another qoute is found
+    // else just printf whatever the input was  
+
+}
+
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
     check_pwd_cmd(input_copy, input_check, env);
+    check_exit_cmd(input_copy, input_check, env);
+    check_echo_cmd(input_copy, input_check, env);
 }
 
 void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
@@ -180,9 +243,10 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quo
             free(env->output);
         }
     }
+    input_check->qoutes = 0;
     input_check->printed_errors = 0;
     check_bultin(input_copy, input_check, env);
-    //free 2d somewhere
+    //free 2d somewhere possibly?
 }
 
 // void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
