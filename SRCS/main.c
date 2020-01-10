@@ -162,6 +162,39 @@ static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_printf("pwd: too many arguments\n");
 }
 
+// static void     ft_remove_qoutes(char **input_copy, t_cmd *input_check)
+// {
+//     int i;
+//     int k;
+
+//     i = 0;
+//     k = 0;
+//     while(input_copy[++i])
+//     {
+//         while(input_copy[i][k])
+//         {
+//             if(input_copy[i][k] != '"')
+//                 ft_printf("%c", input_copy[i][k]);
+//             if (input_copy[i + 1])
+//                 ft_printf(" ");
+//             k++;
+//         }
+//         //if (input_copy[i + 1])
+//             //ft_printf(" ");
+//     }
+// }
+static void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
+{
+    int k;
+
+    k = 0;
+    while(input_copy[k])
+    {
+        if(input_copy[k] != '"')
+            ft_printf("%c", input_copy[k]);
+        k++;
+    }
+}
 static void     ft_print_echo(char **input_copy, t_cmd *input_check)
 {
     int i;
@@ -170,10 +203,10 @@ static void     ft_print_echo(char **input_copy, t_cmd *input_check)
     while(input_copy[++i])
     {
         if(input_check->qoutes)
-        /// take qoutes out and print normally and minus the count
-        else if (!input_check->qoutes)
-            ft_printf("%s ", input_copy[i]);
-        else if (input_copy[i + 1])
+            ft_remove_qoutes(input_copy[i], input_check);
+        if (!input_check->qoutes)
+            ft_printf("%s", input_copy[i]);
+        if (input_copy[i + 1])
             ft_printf(" ");
     }
     printf("\n");
@@ -182,27 +215,38 @@ static void     ft_print_echo(char **input_copy, t_cmd *input_check)
 static void     handle_qoutes(char **input_copy, t_cmd *input_check)
 {
     int i;
+    int k;
 
-    i = 1;
-    while(*input_copy[i] && *input_copy[i] != '"')
-        i++;
-    if(*input_copy[i] == '"')
+    i = -1;
+    k = 0;
+    while(input_copy[++i])
+    {
+        while(input_copy[i][k])
+            k++;
+    }
+    k--;
+    i--;
+    if(input_copy[i][k] == '"')
     {
         input_check->qoutes = 1;
         ft_print_echo(input_copy, input_check);
     }
     else
-        ft_printf("echo: Unmatched " " \n");
+        ft_printf("echo: Unmatched \" \" \n");
+    // ft_printf("echo: Unmatched " " \n");
 }
 
 static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
         printf("\n");
-    else if (input_copy[1] && !input_copy[2])
+    else if (input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0 && input_copy[1][0] == '"')
     {
         if(input_copy[1][0] == '"')
             handle_qoutes(input_copy, input_check);
+        else
+            ft_print_echo(input_copy, input_check);
+
     }
     else if(input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
         ft_print_echo(input_copy, input_check);
