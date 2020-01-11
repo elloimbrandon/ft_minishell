@@ -32,13 +32,13 @@
 static void    print_errors(char *input_copy, t_cmd *input_check, int i)
 {
     if (i == 1)
-        ft_printf("cd: no such file or directory: %s\n", input_copy);
+        ft_printf("%scd: no such file or directory: %s\n", KRED, input_copy);
     else if (i == 2)
-        ft_printf("cd: not a directory: %s\n", input_copy);
+        ft_printf("%scd: not a directory: %s\n", KRED, input_copy);
     else if (i == 3)
-        ft_printf("cd: too many arguments\n");
+        ft_printf("%scd: too many arguments\n", KRED);
     else if (i == 4)
-        ft_printf("cd: string not in pwd: %s\n", input_copy);
+        ft_printf("%scd: string not in pwd: %s\n", KRED, input_copy);
     input_check->printed_errors++;
     
 }
@@ -151,7 +151,7 @@ static void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
     if(!input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
         ft_print_2d(env->env_copy);
     else if (input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
-        ft_printf("env: %s: No such file or directory\n", input_copy[1]);
+        ft_printf("%senv: %s: No such file or directory\n", KRED, input_copy[1]);
 }
 
 static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
@@ -159,22 +159,21 @@ static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
     if(!input_copy[1] && ft_strcmp(input_copy[0], "pwd") == 0)
         print_path(env);
     else if(!input_check->printed_errors && ft_strcmp(input_copy[0], "pwd") == 0)
-        ft_printf("pwd: too many arguments\n");
+        ft_printf("%spwd: too many arguments\n", KRED);
 }
 
 static void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
 {
     int k;
 
-    k = 0;
-    while(input_copy[k])
+    k = -1;
+    while(input_copy[++k])
     {
         if(input_copy[k] != '"')
             ft_printf("%c", input_copy[k]);
         // if (input_copy[k - 1] != ' ' && input_copy[k + 1] != ' ' // dont fkin need
         //     && input_copy[k] == '"' && input_copy[k - 1] != 0)
         //     ft_printf(" ");
-        k++;
     }
 }
 static void     ft_print_echo(char **input_copy, t_cmd *input_check)
@@ -199,20 +198,42 @@ static void     handle_qoutes(char **input_copy, t_cmd *input_check)
     if(input_check->qoutes % 2 == 0)
         ft_print_echo(input_copy, input_check);
     else
-        ft_printf("echo: Unmatched \" \" \n");
+        ft_printf("%secho: Unmatched \" \" \n", KRED);
 }
 
 static void     check_qoutes(char *input_copy, t_cmd *input_check)
 {
     int i;
-    int qoute_count;
 
     i = -1;
-    qoute_count = 0; 
     while(input_copy[++i])
     {
         if(input_copy[i] == '"')
             input_check->qoutes++;
+    }
+}
+
+static void   check_env(char *input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = -1;
+    while(input_copy[++i])
+    {
+        if(input_copy[i] == '$')
+            input_check->expansions++;
+    }
+}
+
+static void   check_tilde(char *input_copy, t_cmd *input_check)
+{
+    int i;
+
+    i = -1;
+    while(input_copy[++i])
+    {
+        if(input_copy[i] == '~')
+            input_check->tilde++;
     }
 }
 
@@ -225,7 +246,7 @@ static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env
         if(input_check->qoutes % 2 == 0)
             ft_print_echo(input_copy, input_check);
         else
-            ft_printf("echo: Unmatched \" \" \n");
+            ft_printf("%secho: Unmatched \" \" \n", KRED);
         input_check->qoutes = 0;
     }
     else if(input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
@@ -234,12 +255,43 @@ static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    input_check->printed_errors = 0; // moved inside function
+    input_check->expansions = 0; // possibly move back into checker
+    input_check->tilde = 0; // possibly move back into checker
+    input_check->printed_errors = 0;
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
     check_pwd_cmd(input_copy, input_check, env);
     check_exit_cmd(input_copy, input_check, env);
     check_echo_cmd(input_copy, input_check, env);
+}
+
+char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
+{
+    char *ret;
+
+    ret = NULL;
+    if(input_check->expansions == 1 && input_copy[1])
+    {
+        handle_env(input_copy, input_check, env);
+        if(env->exp_hold)
+        {
+            ret = ft_strdup(env->exp_hold);
+            ft_printf("bash: command not found: %s\n", ret); //figure out a way for it not to throw 2 errors using other commands
+            free(env->exp_hold);
+            return(ret);
+        }
+    }
+    if(input_check->tilde == 1)
+    {
+        handle_tilde(input_copy, input_check, env);
+        if(env->tilde_hold)
+        {
+            ret = ft_strdup(env->tilde_hold);
+            free(env->tilde_hold);
+            return(ret);
+        }
+    }
+    return(input_copy);
 }
 
 void    ft_parse_cmd(t_env *env, t_cmd *input_check)
@@ -253,15 +305,15 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
     input_copy = split_by_space(input_copy);
     while(input_copy[++i])
     {
-        search_input(input_copy[i], input_check);
+        check_env(input_copy[i], input_check);
+        check_tilde(input_copy[i], input_check);
         check_qoutes(input_copy[i], input_check);
-        if(input_check->expansions >= 1 || input_check->tilde >= 1)
-        {
-            handle_exp_tilde(input_copy[i], input_check, env);
-            input_copy[i] = ft_strdup(env->output);
-            ft_printf("bash: command not found: %s\n", input_copy[i]); /// experiment // cant use with other commands
-            free(env->output); // rename output
-        }
+        //check_set_env(input_copy[i], input_check);
+        //check_unset_env(input_copy[i], input_check);
+        if(input_check->expansions == 1)
+            input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
+        if(input_check->tilde == 1)
+            input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
     }
     check_bultin(input_copy, input_check, env);
 }

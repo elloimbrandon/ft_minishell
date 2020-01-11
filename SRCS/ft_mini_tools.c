@@ -37,12 +37,8 @@ char    **split_by_space(char **input_copy)
 
 void     search_input(char *input_copy, t_cmd *input_check)  // do the same for qoutes
 {
-    if (ft_strrchr(input_copy, '$'))
-        input_check->expansions += 1;
-    else if (ft_strchr(input_copy, '~'))
+    if (ft_strchr(input_copy, '~'))
         input_check->tilde += 1;
-    // else if (ft_strchr(input_copy, '"'))
-    //     input_check->qoutes += 1;
     else if (ft_strcmp(input_copy, "cd") == 0)
         input_check->cd += 1;
     else if (ft_strcmp(input_copy, "env") == 0)

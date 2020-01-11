@@ -26,8 +26,8 @@ void    init_structs(t_env *env, t_cmd *input_check)
     env->env_copy = copy_2d_array(environ);
     env->cmd_copy = ft_memalloc(sizeof(char **));
     env->input = NULL;
-    env->output = NULL;
-    env->solo_exp = 0;
+    env->exp_hold = NULL;
+    env->tilde_hold = NULL;
     input_check->echo = 0;
     input_check->exit = 0;
     input_check->cd = 0;
@@ -38,6 +38,5 @@ void    init_structs(t_env *env, t_cmd *input_check)
     input_check->qoutes = 0;
     input_check->tilde = 0;
     input_check->expansions = 0;
-    input_check->nbr_of_cmds = 0;
     input_check->printed_errors = 0;
 }
