@@ -255,6 +255,9 @@ static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
+    input_check->add_env = 0;
+    input_check->set_e = 0;
+    input_check->unset_e = 0;
     input_check->expansions = 0; // possibly move back into checker
     input_check->tilde = 0; // possibly move back into checker
     input_check->printed_errors = 0;
@@ -276,7 +279,8 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
         if(env->exp_hold)
         {
             ret = ft_strdup(env->exp_hold);
-            ft_printf("bash: command not found: %s\n", ret); //figure out a way for it not to throw 2 errors using other commands
+            if(!input_check->set_e || !input_check->unset_e || !input_check->add_env)
+                ft_printf("bash: command not found: %s\n", ret); //figure out a way for it not to throw 2 errors using other commands
             free(env->exp_hold);
             return(ret);
         }
@@ -294,6 +298,16 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
     return(input_copy);
 }
 
+static void   check_set_unset_env(char *input_copy, t_cmd *input_check)
+{
+    if (ft_strcmp(input_copy, "setenv") == 0)
+        input_check->set_e++;
+    else if (ft_strcmp(input_copy, "unsetenv") == 0)
+        input_check->unset_e++;
+    else if (ft_strcmp(input_copy, "addenv") == 0)
+        input_check->add_env++;
+}
+
 void    ft_parse_cmd(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
@@ -308,8 +322,7 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
         check_env(input_copy[i], input_check);
         check_tilde(input_copy[i], input_check);
         check_qoutes(input_copy[i], input_check);
-        //check_set_env(input_copy[i], input_check);
-        //check_unset_env(input_copy[i], input_check);
+        check_set_unset_env(input_copy[i], input_check);
         if(input_check->expansions == 1)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
         if(input_check->tilde == 1)

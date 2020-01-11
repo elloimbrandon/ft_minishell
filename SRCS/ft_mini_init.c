@@ -28,6 +28,7 @@ void    init_structs(t_env *env, t_cmd *input_check)
     env->input = NULL;
     env->exp_hold = NULL;
     env->tilde_hold = NULL;
+    input_check->add_env = 0;
     input_check->echo = 0;
     input_check->exit = 0;
     input_check->cd = 0;
