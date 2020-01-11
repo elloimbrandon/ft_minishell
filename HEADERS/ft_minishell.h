@@ -36,7 +36,8 @@ typedef struct		s_env
     char            **env_copy; // copy of env varibles
     char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
-    char            *output;
+    char            *exp_hold; // holds env expansion str
+    char            *tilde_hold; // hold home path
 }					t_env;
 
 typedef struct      s_cmd // think of multiple and path for cd ls commands 
@@ -45,14 +46,14 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
     int             exit; // exit command 
     int             cd; // change dir
     int             env; // show all env variables
-    int             pwd; // get current path 
-    int             set_e; // set global env var
-    int             unset_e; // unset global env var
-    int             qoutes; // (has to equal 2) if theirs "  " for use of sentences for cat and echo
+    int             pwd; // get current path
+    unsigned int    add_env;
+    unsigned int    set_e; // set global env var
+    unsigned int    unset_e; // unset global env var
+    unsigned int    qoutes; // counts qoutes used for echo
     unsigned int    tilde; // for use of home dir
     unsigned int    expansions; // number of found $ for expansions
-    int             nbr_of_cmds; // number of total commands
-    int             printed_errors;
+    unsigned int    printed_errors; // counts number of errors that have been printed
 }                   t_cmd;
 
 /*
@@ -63,6 +64,7 @@ void            sigint_handler(int sig_num);
 void            sigquit_handler(int sig_num);
 static char		*get_input(void);
 void            ft_hello(void);
+int             ft_size2d(char **arr);
 int             display_prompt(void);
 void		    init_structs(t_env *env, t_cmd *input_check);
 void            display_get_input(t_env *env, t_cmd *input_check);
