@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_init.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/08 19:32:39 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/11 03:54:12 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void    init_structs(t_env *env, t_cmd *input_check)
     env->output = NULL;
     env->exp_hold = NULL;
     env->tilde_hold = NULL;
+    input_check->executed = 0;
     input_check->add_env = 0;
     input_check->set_e = 0;
     input_check->unset_e = 0;

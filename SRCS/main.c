@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/11 04:08:03 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/11 05:24:58 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,18 +315,40 @@ void    ft_fork(char *exec, char **input_copy)
 
     child_p = fork();
     if(child_p == 0)
+    {
+        printf("%s<----exec\n", exec);
         execve(exec, input_copy, global_env);
+    }
     else if (child_p < 0)
         ft_printf("could not create process\n");
     wait(&child_p);
 }
 
+static void    ft_same(char *exec, char **input_copy)
+{
+    int i;
+    int len;
+    char *temp;
+
+    i = 0;
+    temp = NULL;
+    len = ft_strlen(exec);
+    while(exec[len] != '/')
+        len--;
+    len++;
+    temp = ft_strdup(exec + len);
+    if(ft_strcmp(input_copy[0], temp) != 0)
+        ft_printf("cd: command not found: %s\n", input_copy[0]);
+    free(temp);
+}
 
 static void    exec_cmd(char *exec, struct stat buf, char **input_copy)
 {
-    if(!(lstat(input_copy[0], &buf) != -1) && !exec)
+    //if(!(lstat(input_copy[0], &buf) != -1) && !exec) // try without -1
+    //ft_same(exec, input_copy);
+    if(!(lstat(input_copy[0], &buf)))
         ft_printf("cd: command not found: %s\n", input_copy[0]);
-    else if (exec)
+    if (exec)
     {
         lstat(input_copy[0], &buf);
         ft_fork(exec, input_copy);
@@ -344,6 +366,7 @@ static void    verify_cmd(char *exec, char **input_copy)
 {
     struct stat buf;
 
+    // ft_same(exec, input_copy);
     if (lstat(exec, &buf) != -1)
         exec_cmd(exec, buf, input_copy);
     else
@@ -370,11 +393,12 @@ static void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *en
             else
                 exec = build_path(input_copy[0],path[i]);
             verify_cmd(exec, input_copy);
+            //free(exec); // added
         }
         ft_free_2d(path);
     }
-    else
-        ft_printf("cd: command not found: %s\n", input_copy[0]);
+    // else
+    //     ft_printf("cd: command not found: %s\n", input_copy[0]);
 }
 
 static void    ft_zero_out(t_cmd *input_check)
@@ -466,7 +490,7 @@ void    display_get_input(t_env *env, t_cmd *input_check)
         env->input = get_input();
         if(env->input)
             ft_parse_cmd(env, input_check); /// seg faults on ctrl-d
-        ft_strclr(env->input);
+        ft_strclr(env->input); // maybe free?
     }
 }
 
