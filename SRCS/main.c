@@ -162,27 +162,6 @@ static void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_printf("pwd: too many arguments\n");
 }
 
-// static void     ft_remove_qoutes(char **input_copy, t_cmd *input_check)
-// {
-//     int i;
-//     int k;
-
-//     i = 0;
-//     k = 0;
-//     while(input_copy[++i])
-//     {
-//         while(input_copy[i][k])
-//         {
-//             if(input_copy[i][k] != '"')
-//                 ft_printf("%c", input_copy[i][k]);
-//             if (input_copy[i + 1])
-//                 ft_printf(" ");
-//             k++;
-//         }
-//         //if (input_copy[i + 1])
-//             //ft_printf(" ");
-//     }
-// }
 static void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
 {
     int k;
@@ -192,6 +171,9 @@ static void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
     {
         if(input_copy[k] != '"')
             ft_printf("%c", input_copy[k]);
+        // if (input_copy[k - 1] != ' ' && input_copy[k + 1] != ' ' // dont fkin need
+        //     && input_copy[k] == '"' && input_copy[k - 1] != 0)
+        //     ft_printf(" ");
         k++;
     }
 }
@@ -214,51 +196,45 @@ static void     ft_print_echo(char **input_copy, t_cmd *input_check)
 
 static void     handle_qoutes(char **input_copy, t_cmd *input_check)
 {
-    int i;
-    int k;
-
-    i = -1;
-    k = 0;
-    while(input_copy[++i])
-    {
-        while(input_copy[i][k])
-            k++;
-    }
-    k--;
-    i--;
-    if(input_copy[i][k] == '"')
-    {
-        input_check->qoutes = 1;
+    if(input_check->qoutes % 2 == 0)
         ft_print_echo(input_copy, input_check);
-    }
     else
         ft_printf("echo: Unmatched \" \" \n");
-    // ft_printf("echo: Unmatched " " \n");
+}
+
+static void     check_qoutes(char *input_copy, t_cmd *input_check)
+{
+    int i;
+    int qoute_count;
+
+    i = -1;
+    qoute_count = 0; 
+    while(input_copy[++i])
+    {
+        if(input_copy[i] == '"')
+            input_check->qoutes++;
+    }
 }
 
 static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
         printf("\n");
-    else if (input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0 && input_copy[1][0] == '"')
+    else if(input_check->qoutes && ft_strcmp(input_copy[0], "echo") == 0)
     {
-        if(input_copy[1][0] == '"')
-            handle_qoutes(input_copy, input_check);
-        else
+        if(input_check->qoutes % 2 == 0)
             ft_print_echo(input_copy, input_check);
-
+        else
+            ft_printf("echo: Unmatched \" \" \n");
+        input_check->qoutes = 0;
     }
     else if(input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
         ft_print_echo(input_copy, input_check);
-        //ft_print_2d(input_copy);
-    // if you find one quote[1], go thru rest of the string to see if theirs another
-    // if there isnt print dquote>\n and hold the whole string until another qoute is found
-    // else just printf whatever the input was  
-
 }
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
+    input_check->printed_errors = 0; // moved inside function
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
     check_pwd_cmd(input_copy, input_check, env);
@@ -266,31 +242,28 @@ static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
     check_echo_cmd(input_copy, input_check, env);
 }
 
-void    ft_parse_cmd(t_env *env, t_cmd *input_check) // find a way to handle quoutes
+void    ft_parse_cmd(t_env *env, t_cmd *input_check)
 {
-   
     char **input_copy;
     int i;
 
     i = -1;
     input_copy = ft_strsplit(env->input, ';');
     free(env->input);
-    input_copy = split_by_space(input_copy); // split 2d array by spaces
+    input_copy = split_by_space(input_copy);
     while(input_copy[++i])
     {
         search_input(input_copy[i], input_check);
+        check_qoutes(input_copy[i], input_check);
         if(input_check->expansions >= 1 || input_check->tilde >= 1)
         {
             handle_exp_tilde(input_copy[i], input_check, env);
             input_copy[i] = ft_strdup(env->output);
-            ft_printf("%s\n", input_copy[i]); /// experiment // cant use with other commands
-            free(env->output);
+            ft_printf("bash: command not found: %s\n", input_copy[i]); /// experiment // cant use with other commands
+            free(env->output); // rename output
         }
     }
-    input_check->qoutes = 0;
-    input_check->printed_errors = 0;
     check_bultin(input_copy, input_check, env);
-    //free 2d somewhere possibly?
 }
 
 // void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
