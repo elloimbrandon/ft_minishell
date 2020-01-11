@@ -53,7 +53,6 @@ static void    add_env_var(char *temp, t_cmd *input_check, t_env *env)
     i = -1;
     len = ft_strlen(temp);
     len2 = ft_size2d(env->env_copy);
-    printf("%d <-- size of added env\n", len);
     env->env_copy[len2] = ft_strdup(temp);
     env->env_copy[len2 + 1] = NULL;
     input_check->add_env = 0;

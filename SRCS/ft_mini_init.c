@@ -23,17 +23,14 @@ void    init_structs(t_env *env, t_cmd *input_check)
 {
     extern char **environ;
 
+    global_env = copy_2d_array(environ);
     env->env_copy = copy_2d_array(environ);
     env->cmd_copy = ft_memalloc(sizeof(char **));
     env->input = NULL;
+    env->output = NULL;
     env->exp_hold = NULL;
     env->tilde_hold = NULL;
     input_check->add_env = 0;
-    input_check->echo = 0;
-    input_check->exit = 0;
-    input_check->cd = 0;
-    input_check->env = 0;
-    input_check->pwd = 0;
     input_check->set_e = 0;
     input_check->unset_e = 0;
     input_check->qoutes = 0;

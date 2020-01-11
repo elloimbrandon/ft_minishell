@@ -27,6 +27,7 @@
 
 # define BUFF 2048
 
+char    **global_env;
 /*
 ** Structs
 */
@@ -36,6 +37,7 @@ typedef struct		s_env
     char            **env_copy; // copy of env varibles
     char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
+    char            *output;
     char            *exp_hold; // holds env expansion str
     char            *tilde_hold; // hold home path
 }					t_env;
@@ -74,7 +76,8 @@ void            search_input(char *input_copy, t_cmd *input_check);
 char            **split_by_space(char **input_copy);
 void            handle_exp_tilde(char *input_copy, t_cmd *input_check, t_env *env);
 void            handle_env(char *input_copy, t_cmd *input_check, t_env *env);
-void            find_env_var(char *temp, t_cmd *input_check, t_env *env); 
+void            find_env_var(char *temp, t_cmd *input_check, t_env *env);
+char            *build_path(char *input_copy, char *path);
 
 // testing these functions
 void        ft_which_cmd(char **path, t_env *env);

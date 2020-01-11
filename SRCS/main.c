@@ -15,20 +15,6 @@
 
 ///////////////////use csh
 
-// static char    *get_path(char *temp, t_env *env)
-// {
-//     int i;
-
-//     i = -1;
-//     while(env->env_copy[++i])
-//     {
-//         if (strncmp("PATH=", env->env_copy[i], 5) == 0)
-//         temp = ft_strdup(env->env_copy[i] + 5);
-//         temp = ft_strdup(temp);
-//     }
-//     return(temp);
-// }
-
 static void    print_errors(char *input_copy, t_cmd *input_check, int i)
 {
     if (i == 1)
@@ -255,12 +241,6 @@ static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env
 
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
-    input_check->add_env = 0;
-    input_check->set_e = 0;
-    input_check->unset_e = 0;
-    input_check->expansions = 0; // possibly move back into checker
-    input_check->tilde = 0; // possibly move back into checker
-    input_check->printed_errors = 0;
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
     check_pwd_cmd(input_copy, input_check, env);
@@ -308,6 +288,104 @@ static void   check_set_unset_env(char *input_copy, t_cmd *input_check)
         input_check->add_env++;
 }
 
+static char    *get_path(char *hold, t_env *env)
+{
+    int i;
+    char *temp;
+
+    i = -1;
+    while(env->env_copy[++i])
+    {
+        if (strncmp("PATH=", env->env_copy[i], 5) == 0)
+        temp = ft_strdup(env->env_copy[i] + 5);
+    }
+    return(temp);
+}
+
+char    *build_path(char *input_copy, char *path)
+{
+    path = ft_strcat(path, "/");
+    return(ft_strjoin(path, input_copy));
+}
+
+void    ft_fork(char *exec, char **input_copy)
+{
+    pid_t child_p;
+
+    child_p = fork();
+    if(child_p == 0)
+        execve(exec, input_copy, global_env);
+    else if (child_p < 0)
+        ft_printf("could not create process\n");
+    wait(&child_p);
+}
+
+
+static void    exec_cmd(char *exec, struct stat buf, char **input_copy)
+{
+    if(!(lstat(input_copy[0], &buf) != -1) && !exec)
+        ft_printf("cd: command not found: %s\n", input_copy[0]);
+    else if (exec)
+    {
+        lstat(input_copy[0], &buf);
+        ft_fork(exec, input_copy);
+    }
+    else if (lstat(input_copy[0], &buf) != -1)
+    {
+        if(S_ISDIR(buf.st_mode))
+            chdir(input_copy[0]);
+        else if (S_ISREG(buf.st_mode))
+            ft_fork(input_copy[0], input_copy);
+    }
+}
+
+static void    verify_cmd(char *exec, char **input_copy)
+{
+    struct stat buf;
+
+    if (lstat(exec, &buf) != -1)
+        exec_cmd(exec, buf, input_copy);
+    else
+        free(exec);
+}
+
+static void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    char **path;
+    char *hold;
+    char *exec;
+    int i;
+
+    i = -1;
+    exec = NULL;
+    hold = get_path(hold, env);
+    if(path)
+    {
+        path = ft_strsplit(hold , ':');
+        while(path[++i])
+        {
+            if(ft_strcmp(input_copy[0], path[i]) == 0)
+                exec = ft_strdup(input_copy[0]);
+            else
+                exec = build_path(input_copy[0],path[i]);
+            verify_cmd(exec, input_copy);
+        }
+        ft_free_2d(path);
+    }
+    else
+        ft_printf("cd: command not found: %s\n", input_copy[0]);
+}
+
+static void    ft_zero_out(t_cmd *input_check)
+{
+    input_check->add_env = 0;
+    input_check->set_e = 0;
+    input_check->unset_e = 0;
+    input_check->expansions = 0; // possibly move back into checker
+    input_check->tilde = 0; // possibly move back into checker
+    input_check->printed_errors = 0;
+}
+
 void    ft_parse_cmd(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
@@ -328,24 +406,10 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
         if(input_check->tilde == 1)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
     }
+    ft_zero_out(input_check);
     check_bultin(input_copy, input_check, env);
+    check_system_cmd(input_copy, input_check, env);
 }
-
-// void    check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env)
-// {
-//     char *path;
-//     //struct stat buf;
-
-//     //path = ft_memalloc(sizeof(char*));    //path = ft_memalloc(sizeof(char**))
-//     //path = get_path(path, env);
-//     //path = ft_strsplit(path , ':');
-//     // ft_print_2d(input_copy);
-//     //if(path)
-//         //ft_which_cmd(path, env); // throw a check to see if path exists
-//     //ft_print_path(path);
-//     //ft_print_2d(env->env_copy);
-    
-// }
 
 static char		*get_input(void)
 {
