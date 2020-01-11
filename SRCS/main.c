@@ -12,7 +12,7 @@
 
 #include "../HEADERS/ft_minishell.h"
 #include <stdio.h> /////////////////// REMOVE
-
+/////////////////// REMOVE EVERY PRINTF!!!
 ///////////////////use csh
 
 static void    print_errors(char *input_copy, t_cmd *input_check, int i)
@@ -407,8 +407,10 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
     }
     ft_zero_out(input_check);
-    check_bultin(input_copy, input_check, env);
+    check_bultin(input_copy, input_check, env); // have to let the system know i already executed a command
+    //ft_already_exc(input_copy, input_check);
     check_system_cmd(input_copy, input_check, env);
+    // zero out executed cmds
 }
 
 static char		*get_input(void)
