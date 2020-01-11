@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 13:04:20 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/11 04:08:03 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ static void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env
         ft_print_echo(input_copy, input_check);
 }
 
+
 static void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     check_cd_cmd(input_copy, input_check, env);
@@ -386,6 +387,26 @@ static void    ft_zero_out(t_cmd *input_check)
     input_check->printed_errors = 0;
 }
 
+void    ft_already_exc(t_cmd *input_check, char **input_copy)
+{
+    if (ft_strcmp(input_copy[0], "echo") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "cd") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "env") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "pwd") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "exit") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "setenv") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "unsetenv") == 0)
+        input_check->executed = 1;
+    else if (ft_strcmp(input_copy[0], "addenv") == 0)
+        input_check->executed = 1;
+}
+
 void    ft_parse_cmd(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
@@ -407,10 +428,11 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
     }
     ft_zero_out(input_check);
-    check_bultin(input_copy, input_check, env); // have to let the system know i already executed a command
-    //ft_already_exc(input_copy, input_check);
-    check_system_cmd(input_copy, input_check, env);
-    // zero out executed cmds
+    check_bultin(input_copy, input_check, env);
+    ft_already_exc(input_check, input_copy);
+    if(!input_check->executed)
+        check_system_cmd(input_copy, input_check, env);
+    input_check->executed = 0;
 }
 
 static char		*get_input(void)
