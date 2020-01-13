@@ -49,6 +49,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
     int             cd; // change dir
     int             env; // show all env variables
     int             pwd; // get current path
+    unsigned int    executed;
     unsigned int    add_env;
     unsigned int    set_e; // set global env var
     unsigned int    unset_e; // unset global env var
