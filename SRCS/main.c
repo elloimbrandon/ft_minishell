@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/11 05:24:58 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/12 23:49:45 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,33 +298,16 @@ static char    *get_path(char *hold, t_env *env)
     while(env->env_copy[++i])
     {
         if (strncmp("PATH=", env->env_copy[i], 5) == 0)
-        temp = ft_strdup(env->env_copy[i] + 5);
+        {
+            temp = ft_strdup(env->env_copy[i] + 5);
+            printf("h %s\n", temp);
+            return(temp);
+        }
     }
-    return(temp);
+    return(NULL);
 }
 
-char    *build_path(char *input_copy, char *path)
-{
-    path = ft_strcat(path, "/");
-    return(ft_strjoin(path, input_copy));
-}
-
-void    ft_fork(char *exec, char **input_copy)
-{
-    pid_t child_p;
-
-    child_p = fork();
-    if(child_p == 0)
-    {
-        printf("%s<----exec\n", exec);
-        execve(exec, input_copy, global_env);
-    }
-    else if (child_p < 0)
-        ft_printf("could not create process\n");
-    wait(&child_p);
-}
-
-static void    ft_same(char *exec, char **input_copy)
+static int    ft_same(char *exec, char **input_copy)
 {
     int i;
     int len;
@@ -338,15 +321,40 @@ static void    ft_same(char *exec, char **input_copy)
     len++;
     temp = ft_strdup(exec + len);
     if(ft_strcmp(input_copy[0], temp) != 0)
-        ft_printf("cd: command not found: %s\n", input_copy[0]);
+    {
+        free(temp);
+        return(1);
+    }
     free(temp);
+    return(0);
+}
+
+char    *build_path(char *input_copy, char *path)
+{
+    path = ft_strcat(path, "/");
+    return(ft_strjoin(path, input_copy));
+}
+
+void    ft_fork(char *exec, char **input_copy)
+{
+    pid_t child_p;
+
+    child_p = fork();
+    if(child_p == 0) //&& ft_same(exec, input_copy) == 0)
+    {
+        printf("%s<----exec\n", exec);
+        execve(exec, input_copy, global_env);
+    }
+    else if (child_p < 0)
+        ft_printf("could not create process\n");
+    wait(&child_p);
 }
 
 static void    exec_cmd(char *exec, struct stat buf, char **input_copy)
 {
     //if(!(lstat(input_copy[0], &buf) != -1) && !exec) // try without -1
     //ft_same(exec, input_copy);
-    if(!(lstat(input_copy[0], &buf)))
+    if(!(lstat(input_copy[0], &buf)) && !exec)
         ft_printf("cd: command not found: %s\n", input_copy[0]);
     if (exec)
     {
@@ -367,10 +375,13 @@ static void    verify_cmd(char *exec, char **input_copy)
     struct stat buf;
 
     // ft_same(exec, input_copy);
-    if (lstat(exec, &buf) != -1)
+    if (!(lstat(exec, &buf)))
         exec_cmd(exec, buf, input_copy);
     else
+    {
+        printf("error\n");
         free(exec);
+    }
 }
 
 static void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env)
@@ -378,16 +389,18 @@ static void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *en
     char **path;
     char *hold;
     char *exec;
+    struct stat buf;
     int i;
 
     i = -1;
     exec = NULL;
+
     hold = get_path(hold, env);
-    if(path)
+    if(hold)
     {
         path = ft_strsplit(hold , ':');
         while(path[++i])
-        {
+        { 
             if(ft_strcmp(input_copy[0], path[i]) == 0)
                 exec = ft_strdup(input_copy[0]);
             else
@@ -397,8 +410,8 @@ static void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *en
         }
         ft_free_2d(path);
     }
-    // else
-    //     ft_printf("cd: command not found: %s\n", input_copy[0]);
+    else
+        ft_printf("cd: command not found: %s\n", input_copy[0]);
 }
 
 static void    ft_zero_out(t_cmd *input_check)
@@ -431,6 +444,28 @@ void    ft_already_exc(t_cmd *input_check, char **input_copy)
         input_check->executed = 1;
 }
 
+static void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    char *exec;
+
+    exec = NULL;
+    if (ft_strchr(input_copy[0], '/') != NULL && ft_strchr(input_copy[0], '.') != NULL)
+    {
+        if (access(input_copy[0], F_OK) == 0)
+        {
+            if (access(input_copy[0], X_OK) == 0)
+            {
+                exec = ft_strdup(input_copy[0] + 2); // dupes after "./"
+                ft_fork(exec, input_copy);
+            }
+            else
+                ft_printf("%s: Permission denied.\n", *input_copy[0]);
+        }
+        else
+            ft_printf("%s: command not found\n", *input_copy[0]);
+        input_check->executed = 1;
+    }
+}
 void    ft_parse_cmd(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
@@ -454,9 +489,14 @@ void    ft_parse_cmd(t_env *env, t_cmd *input_check)
     ft_zero_out(input_check);
     check_bultin(input_copy, input_check, env);
     ft_already_exc(input_check, input_copy);
+    ft_local_exec(input_copy, input_check, env);
     if(!input_check->executed)
+    {
         check_system_cmd(input_copy, input_check, env);
+    }
     input_check->executed = 0;
+    if (ft_strcmp(input_copy[0], "cat") == 0)
+        printf("\n");
 }
 
 static char		*get_input(void)
