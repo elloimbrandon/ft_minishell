@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:54:03 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 01:21:04 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     char **input_copy;
 
     input_copy = ft_strsplit(env->input, ';');
-    free(env->input);
+    //free(env->input);
     input_copy = split_by_space(input_copy);
     ft_parse_input(env, input_check, input_copy);
     ft_zero_out(input_check);
@@ -78,8 +78,7 @@ void    display_get_input(t_env *env, t_cmd *input_check)
         env->input = get_input();
         if(env->input)
             ft_parse_mini(env, input_check); /// seg faults on ctrl-d
-        if(env->input)
-            free(env->input);
+        free(env->input);
     }
 }
 
