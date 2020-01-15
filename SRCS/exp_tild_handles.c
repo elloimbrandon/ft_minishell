@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:41:48 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 02:17:34 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,14 @@ void    find_env_var(char *temp, t_cmd *input_check, t_env *env)
             if(input_check->set_e == 1)
             {
                 env->exp_hold = ft_strdup(temp);
-                ft_strdel(&env->env_copy[i]);
+                ft_strclr(env->env_copy[i]);
                 env->env_copy[i] = ft_strdup(env->exp_hold);
                 input_check->set_e = 0;
             }
             else if(input_check->unset_e == 1)
             {
                 ft_strdel(&env->env_copy[i]);
+                env->env_copy[i] = NULL;
                 input_check->unset_e = 0;
             }
             else

@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:26:27 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 01:52:55 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
                 break ;
             }
         }
-        else
-            free(exec);
+        // else if(exec)
+        free(exec); // free
     }
     if (k == 0 && ft_strcmp(input_copy[0], "\n") != 0)
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);

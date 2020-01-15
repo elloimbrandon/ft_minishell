@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 01:21:04 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 01:37:22 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 
 /*
-** to do's: break up functions into files, norm, check for leaks and fix envunset free problem
+** to do's: break up functions into files, norm, check for leaks and fix envunset free problem /// think about getting rid of addenv
 */
 
 void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
@@ -56,7 +56,6 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     char **input_copy;
 
     input_copy = ft_strsplit(env->input, ';');
-    //free(env->input);
     input_copy = split_by_space(input_copy);
     ft_parse_input(env, input_check, input_copy);
     ft_zero_out(input_check);
