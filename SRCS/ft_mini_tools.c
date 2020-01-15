@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/09 00:31:59 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 00:27:27 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,26 +29,45 @@ char    **split_by_space(char **input_copy)
     return(ret);
 }
 
-/*
-** searches through input strings to find a '$' or
-** a '~' symbol and adds a count to structs so we can
-** modify the output later accordingly
-*/
-
-void     search_input(char *input_copy, t_cmd *input_check)  // do the same for qoutes
+void   check_set_unset_env(char *input_copy, t_cmd *input_check)
 {
-    if (ft_strchr(input_copy, '~'))
-        input_check->tilde += 1;
-    else if (ft_strcmp(input_copy, "cd") == 0)
-        input_check->cd += 1;
-    else if (ft_strcmp(input_copy, "env") == 0)
-        input_check->env += 1;
-    else if (ft_strcmp(input_copy, "exit") == 0)
-        input_check->exit += 1;
-    else if (ft_strcmp(input_copy, "pwd") == 0)
-        input_check->pwd += 1;
-    else if (ft_strcmp(input_copy, "setenv") == 0)
-        input_check->set_e += 1;
+    if (ft_strcmp(input_copy, "setenv") == 0)
+        input_check->set_e++;
     else if (ft_strcmp(input_copy, "unsetenv") == 0)
-        input_check->unset_e += 1;
+        input_check->unset_e++;
+    else if (ft_strcmp(input_copy, "addenv") == 0)
+        input_check->add_env++;
+}
+
+int		ft_size_2d(char **arr)
+{
+	int		i;
+
+	i = 0;
+	while (arr[i])
+		i++;
+	return (i);
+}
+
+char    *get_path(char *hold, t_env *env)
+{
+    int i;
+    char *temp;
+
+    i = -1;
+    while(env->env_copy[++i])
+    {
+        if (strncmp("PATH=", env->env_copy[i], 5) == 0)
+        {
+            temp = ft_strdup(env->env_copy[i] + 5);
+            return(temp);
+        }
+    }
+    return(NULL);
+}
+
+char    *build_path(char *input_copy, char *path)
+{
+    path = ft_strcat(path, "/");
+    return(ft_strjoin(path, input_copy));
 }

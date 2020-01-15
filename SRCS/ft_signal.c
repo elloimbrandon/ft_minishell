@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/03 22:38:58 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 00:50:50 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,27 @@ int    display_prompt(void)
     getcwd(display, BUFF);
     ft_printf("%s%s$>", KGRN, display);
     return(0);
+}
+
+char		*get_input(void)
+{
+	char	*buf;
+    char    *temp;
+	int		result;
+
+    buf = ft_memalloc(sizeof(char*));
+    temp = ft_memalloc(sizeof(char*));
+	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
+	{
+        temp = ft_strjoin(temp, buf);
+        if (!temp)
+			temp = ft_strdup(buf);
+        ft_strclr(buf);
+	}
+    if(buf[0] == '\n')
+        temp[0] = *ft_strjoin(temp, buf);
+    free(buf);
+    return(temp);
 }
 
 /*
