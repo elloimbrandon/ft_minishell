@@ -37,50 +37,73 @@ typedef struct		s_env
     char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
     char            *output;
+    char            *exp_hold; // holds env expansion str
+    char            *tilde_hold; // hold home path
 }					t_env;
 
 typedef struct      s_cmd // think of multiple and path for cd ls commands 
 {
-    int             echo; // echo command
-    int             exit; // exit command 
-    int             cd; // change dir
-    int             env; // show all env variables
-    int             pwd; // get current path 
-    int             set_e; // set global env var
-    int             unset_e; // unset global env var
-    int             qoutes; // (has to equal 2) if theirs "  " for use of sentences for cat and echo
+    unsigned int    executed;
+    unsigned int    add_env;
+    unsigned int    set_e; // set global env var
+    unsigned int    unset_e; // unset global env var
+    unsigned int    qoutes; // counts qoutes used for echo
     unsigned int    tilde; // for use of home dir
     unsigned int    expansions; // number of found $ for expansions
-    int             nbr_of_cmds; // number of total commands
-    int             printed_errors;
+    unsigned int    printed_errors; // counts number of errors that have been printed
 }                   t_cmd;
 
 /*
 ** Functions
 */
 
-void            sigint_handler(int sig_num);
-void            sigquit_handler(int sig_num);
-static char		*get_input(void);
-void            ft_hello(void);
-int             display_prompt(void);
-void		    init_structs(t_env *env, t_cmd *input_check);
-void            display_get_input(t_env *env, t_cmd *input_check);
-void            init_input_check(t_cmd *input_check);
-void            ft_parse_cmd(t_env *env, t_cmd *input_check);
-void            search_input(char *input_copy, t_cmd *input_check);
-char            **split_by_space(char **input_copy);
-void            handle_exp_tilde(char *input_copy, t_cmd *input_check, t_env *env);
-void            handle_env(char *input_copy, t_cmd *input_check, t_env *env);
-void            find_env_var(char *temp, t_cmd *input_check, t_env *env); 
 
-// testing these functions
-void        ft_which_cmd(char **path, t_env *env);
-char        *find_path(char *path, t_env *env);
-void        check_sys_cmd(char *input_copy, t_cmd *input_check, t_env *env);
-void        check_commands(char *input_copy, t_cmd *input_check, t_env *env);
-void        get_home_path(char *temp, t_env *env);
-void        handle_tilde(char *input_copy, t_cmd *input_check, t_env *env);
-//int         exec_fork(t_env *env);
+int     display_prompt(void);
+int		ft_size_2d(char **arr);
+int    ft_same_cmd(char *exec, char **input_copy);
+char		*get_input(void);
+char    **split_by_space(char **input_copy);
+char    *get_path(char *hold, t_env *env);
+char    *build_path(char *input_copy, char *path);
+char     *find_home(t_env *env);
+char     *find_old_pwd(t_env *env);
+char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env);
+void    ft_hello(void);
+void    sigint_handler(int sig_num);
+void    sigquit_handler(int sig_num);
+void    display_get_input(t_env *env, t_cmd *input_check);
+void    check_bultin(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_set_unset_env(char *input_copy, t_cmd *input_check);
+void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_cd_dir(char **input_copy, t_cmd *input_check);
+void    check_env(char *input_copy, t_cmd *input_check);
+void    check_qoutes(char *input_copy, t_cmd *input_check);
+void    check_tilde(char *input_copy, t_cmd *input_check);
+void    check_exec(char *hold, char **input_copy, t_env *env);
+void    handle_tilde(char *input_copy, t_cmd *input_check, t_env *env);
+void    handle_env(char *input_copy, t_cmd *input_check, t_env *env);
+void    handle_qoutes(char **input_copy, t_cmd *input_check);
+void    find_env_var(char *temp, t_cmd *input_check, t_env *env);
+void    ft_parse_mini(t_env *env, t_cmd *input_check);
+void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy);
+void    ft_remove_qoutes(char *input_copy, t_cmd *input_check);
+void    ft_print_echo(char **input_copy, t_cmd *input_check);
+void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env);
+void    ft_already_exc(t_cmd *input_check, char **input_copy);
+void    ft_zero_out(t_cmd *input_check);
+void    ft_print_2d(char **two_d);
+void    ft_fork(char *exec, char **input_copy, t_env *env);
+void    ft_cd(char **input_copy, t_cmd *input_check, t_env *env);
+void    print_path(t_env *env);
+void    print_errors(char *input_copy, t_cmd *input_check, int i);
+void    get_home_path(char *temp, t_env *env);
+void    add_env_var(char *temp, t_cmd *input_check, t_env *env);
+void    init_structs(t_env *env, t_cmd *input_check);
+
 
 #endif
