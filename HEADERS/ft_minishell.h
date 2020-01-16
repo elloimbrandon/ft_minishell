@@ -43,9 +43,6 @@ typedef struct		s_env
 typedef struct      s_cmd // think of multiple and path for cd ls commands 
 {
     unsigned int    executed;
-    unsigned int    add_env;
-    unsigned int    set_e; // set global env var
-    unsigned int    unset_e; // unset global env var
     unsigned int    qoutes; // counts qoutes used for echo
     unsigned int    tilde; // for use of home dir
     unsigned int    expansions; // number of found $ for expansions
@@ -77,7 +74,6 @@ void    check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env);
-void    check_set_unset_env(char *input_copy, t_cmd *input_check);
 void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_cd_dir(char **input_copy, t_cmd *input_check);
 void    check_env(char *input_copy, t_cmd *input_check);
