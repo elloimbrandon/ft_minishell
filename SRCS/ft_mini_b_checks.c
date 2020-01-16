@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 19:42:40 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 20:02:55 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,18 +114,13 @@ void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env)
     }
 }
 
-static int      find_unset_var(char **input_copy, t_env *env)
+static int     unset_env(char *temp, t_env *env, int k)
 {
     int i;
-    int k;
-    char *temp;
-    char *temp2;
+    char *swap;
 
     i = -1;
-    k = 0;
-    temp2 = NULL;
-    temp = ft_strdup(input_copy[1]);
-    ft_strcat(temp, "=");
+    swap = NULL;
     while(env->env_copy[++i])
     {
         if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
@@ -135,16 +130,28 @@ static int      find_unset_var(char **input_copy, t_env *env)
         }
         if(k == 1 && env->env_copy)
         {
-            temp2 = env->env_copy[i + 1];
-            env->env_copy[i] = temp2;
+            swap = env->env_copy[i + 1];
+            env->env_copy[i] = swap;
         }
     }
-    free(temp);
-    if(k == 1)
+    return(k);
+}
+
+static int      find_unset_var(char **input_copy, t_env *env)
+{
+    int i;
+    int k;
+    char *temp;
+
+    k = 0;
+    temp = ft_strdup(input_copy[1]);
+    ft_strcat(temp, "=");
+    if(unset_env(temp, env, k) == 1)
     {
-        free(temp2); // might not need to free
+        free(temp);
         return(1);
     }
+    free(temp);
     return(0);
 }
 

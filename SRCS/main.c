@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 19:11:01 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 20:13:19 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
     }
 }
 
+// void    free_mini(char **input_copy, t_cmd *input_check, t_env *env)
+// {
+//     ft_free_2d(input_copy);
+// }
+
 void    ft_parse_mini(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
@@ -69,6 +74,8 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     input_check->executed = 0;
     if (ft_strcmp(input_copy[0], "cat") == 0)
         ft_printf("\n");
+    ft_free_2d(input_copy);
+    //free_mini(input_copy, input_check, env);
 }
 
 
@@ -97,5 +104,6 @@ int        main(void)
     signal(SIGQUIT, sigquit_handler);
     signal(SIGINT, sigint_handler);
     display_get_input(env, input_check);
+    ft_free_2d(env->env_copy); // might need to move
     return(0);
 }

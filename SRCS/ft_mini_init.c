@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 18:56:10 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 20:08:04 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void    init_structs(t_env *env, t_cmd *input_check)
     extern char **environ;
 
     env->env_copy = copy_2d_array(environ);
-    env->cmd_copy = ft_memalloc(sizeof(char **));
     env->input = NULL;
     env->output = NULL;
     env->exp_hold = NULL;
