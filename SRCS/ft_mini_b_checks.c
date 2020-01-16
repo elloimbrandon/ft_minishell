@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 18:57:50 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 19:42:40 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,13 @@ void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 }
 
 
-static int    find_add_env_var(char **input_copy, t_cmd *input_check, t_env *env)
+static int    find_set_var(char **input_copy, t_env *env)
 {
     int i;
-    //int len;
     char *temp;
 
     i = -1;
     temp = NULL;
-    //len = ft_strlen(input_copy[1]);
     while(env->env_copy[++i])
     {
         if(ft_strccmp(input_copy[1], env->env_copy[i], '=') == 0)
@@ -102,27 +100,66 @@ static void    add_env_var(char **input_copy, t_env *env)
     env->env_copy = add_new_line(env, input_copy);
 }
 
-static void     handle_setenv(char **input_copy, t_cmd *input_check, t_env *env)
-{
-    if(find_add_env_var(input_copy, input_check, env) == 0)
-        add_env_var(input_copy, env);
-}
 
 void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "setenv") == 0)
         ft_printf("%ssetenv: not enough arguments\n", KRED);
+    else if(input_copy[2] && ft_strcmp(input_copy[0], "setenv") == 0)
+        ft_printf("%ssetenv: too many arguments\n", KRED);
     else if(input_copy[1] && ft_strcmp(input_copy[0], "setenv") == 0)
     {
-        if (find_add_env_var(input_copy, input_check, env) == 0)
+        if (find_set_var(input_copy, env) == 0)
             add_env_var(input_copy, env);
     }
 }
 
-// void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
-// {
-    
-// }
+static int      find_unset_var(char **input_copy, t_env *env)
+{
+    int i;
+    int k;
+    char *temp;
+    char *temp2;
+
+    i = -1;
+    k = 0;
+    temp2 = NULL;
+    temp = ft_strdup(input_copy[1]);
+    ft_strcat(temp, "=");
+    while(env->env_copy[++i])
+    {
+        if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
+        {
+            ft_strdel(&env->env_copy[i]);
+            k = 1;
+        }
+        if(k == 1 && env->env_copy)
+        {
+            temp2 = env->env_copy[i + 1];
+            env->env_copy[i] = temp2;
+        }
+    }
+    free(temp);
+    if(k == 1)
+    {
+        free(temp2); // might not need to free
+        return(1);
+    }
+    return(0);
+}
+
+void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
+{
+    if(!input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
+        ft_printf("%sunsetenv: not enough arguments\n", KRED);
+    else if(input_copy[2] && ft_strcmp(input_copy[0], "unsetenv") == 0)
+        ft_printf("%sunsetenv: too many arguments\n", KRED);
+    else if(input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
+    {
+        if(find_unset_var(input_copy, env) == 0)
+            ft_printf("%sunsetenv: var doesnt exist: %s\n", KRED, input_copy[1]);
+    }
+}
 
 void     check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env)
 {

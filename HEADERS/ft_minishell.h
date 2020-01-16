@@ -107,5 +107,6 @@ void    init_structs(t_env *env, t_cmd *input_check);
 
 
 void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env);
 
 #endif
