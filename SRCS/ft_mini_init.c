@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 01:56:31 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 18:56:10 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void    init_structs(t_env *env, t_cmd *input_check)
     env->exp_hold = NULL;
     env->tilde_hold = NULL;
     input_check->executed = 0;
-    input_check->add_env = 0;
     input_check->set_e = 0;
     input_check->unset_e = 0;
     input_check->qoutes = 0;

@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 01:37:22 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 17:38:47 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
     check_pwd_cmd(input_copy, input_check, env);
     check_exit_cmd(input_copy, input_check, env);
     check_echo_cmd(input_copy, input_check, env);
+    check_setenv(input_copy, input_check, env);
 }
 
 void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)

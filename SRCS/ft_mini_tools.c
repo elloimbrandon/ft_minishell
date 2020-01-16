@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:27:27 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 18:56:04 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void   check_set_unset_env(char *input_copy, t_cmd *input_check)
         input_check->set_e++;
     else if (ft_strcmp(input_copy, "unsetenv") == 0)
         input_check->unset_e++;
-    else if (ft_strcmp(input_copy, "addenv") == 0)
-        input_check->add_env++;
 }
 
 int		ft_size_2d(char **arr)

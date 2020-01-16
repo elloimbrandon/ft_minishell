@@ -102,8 +102,10 @@ void    ft_cd(char **input_copy, t_cmd *input_check, t_env *env);
 void    print_path(t_env *env);
 void    print_errors(char *input_copy, t_cmd *input_check, int i);
 void    get_home_path(char *temp, t_env *env);
-void    add_env_var(char *temp, t_cmd *input_check, t_env *env);
+//void    add_env_var(char *temp, t_cmd *input_check, t_env *env);
 void    init_structs(t_env *env, t_cmd *input_check);
 
+
+void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env);
 
 #endif
