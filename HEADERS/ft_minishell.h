@@ -34,7 +34,6 @@
 typedef struct		s_env
 {
     char            **env_copy; // copy of env varibles
-    char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
     char            *output;
     char            *exp_hold; // holds env expansion str
