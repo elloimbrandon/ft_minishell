@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_print.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:34:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:27:16 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 00:39:09 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void     ft_print_2d(char **two_d)
 
     i = -1;
     while(two_d[++i])
-        ft_printf("%s\n", two_d[i]);
+        ft_printf("%s%s\n", KBLU, two_d[i]);
 }
 
 void    print_path(t_env *env)

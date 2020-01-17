@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:27:27 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 00:22:56 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,79 @@
 ** new 2d array so we can work with array's without spaces
 */
 
+static int		w_dcount(char *words, int delim)
+{
+	int count;
+	int i;
+	i = 0;
+	count = 0;
+	while (words[i])
+	{
+		if (words[i] == delim)
+			i++;
+		else
+		{
+			while (words[i] && words[i] != delim)
+				i++;
+			count++;
+		}
+	}
+	return (count);
+}
+
+static int     ft_count_words_2d(char **strings)
+{
+    int idx;
+    int words_in_string;
+    int total_words;
+
+    idx = -1;
+    total_words = 0;
+    while(strings[++idx])
+    {
+        words_in_string = w_dcount(strings[idx], ' ');
+        total_words += words_in_string;
+    }
+    return (words_in_string);
+}
+
 char    **split_by_space(char **input_copy)
 {
     char **ret;
+    char **flat;
     int i;
+    int j;
+    int k;
 
     i = 0;
+    k = -1;
+    int total_words = ft_count_words_2d(input_copy);
+    flat = ft_memalloc(sizeof(char**) * (total_words + 1));
+    flat[total_words] = NULL;
     while(input_copy[i])
+    {
         ret = ft_strsplit(input_copy[i++], ' ');
+        j = -1;
+        while(ret[++j])
+            flat[++k] = ret[j];
+        free(ret);
+    }
     ft_free_2d(input_copy);
-    return(ret);
+    return(flat);
 }
 
-void   check_set_unset_env(char *input_copy, t_cmd *input_check)
-{
-    if (ft_strcmp(input_copy, "setenv") == 0)
-        input_check->set_e++;
-    else if (ft_strcmp(input_copy, "unsetenv") == 0)
-        input_check->unset_e++;
-    else if (ft_strcmp(input_copy, "addenv") == 0)
-        input_check->add_env++;
-}
+// char    **split_by_space(char **input_copy)
+// {
+//     char **ret;
+//     int i;
+
+//     i = 0;
+    
+//     while(input_copy[i])
+//         ret = ft_strsplit(input_copy[i++], ' ');
+//     ft_free_2d(input_copy);
+//     return(ret);
+// }
 
 int		ft_size_2d(char **arr)
 {

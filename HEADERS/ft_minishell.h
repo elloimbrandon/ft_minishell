@@ -34,7 +34,6 @@
 typedef struct		s_env
 {
     char            **env_copy; // copy of env varibles
-    char            **cmd_copy; // copy of input from command line
     char            *input; // command line input
     char            *output;
     char            *exp_hold; // holds env expansion str
@@ -44,9 +43,6 @@ typedef struct		s_env
 typedef struct      s_cmd // think of multiple and path for cd ls commands 
 {
     unsigned int    executed;
-    unsigned int    add_env;
-    unsigned int    set_e; // set global env var
-    unsigned int    unset_e; // unset global env var
     unsigned int    qoutes; // counts qoutes used for echo
     unsigned int    tilde; // for use of home dir
     unsigned int    expansions; // number of found $ for expansions
@@ -71,14 +67,12 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env);
 void    ft_hello(void);
 void    sigint_handler(int sig_num);
 void    sigquit_handler(int sig_num);
-void    display_get_input(t_env *env, t_cmd *input_check);
 void    check_bultin(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env);
-void    check_set_unset_env(char *input_copy, t_cmd *input_check);
 void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_cd_dir(char **input_copy, t_cmd *input_check);
 void    check_env(char *input_copy, t_cmd *input_check);
@@ -102,8 +96,11 @@ void    ft_cd(char **input_copy, t_cmd *input_check, t_env *env);
 void    print_path(t_env *env);
 void    print_errors(char *input_copy, t_cmd *input_check, int i);
 void    get_home_path(char *temp, t_env *env);
-void    add_env_var(char *temp, t_cmd *input_check, t_env *env);
+//void    add_env_var(char *temp, t_cmd *input_check, t_env *env);
 void    init_structs(t_env *env, t_cmd *input_check);
 
+
+void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env);
+void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env);
 
 #endif
