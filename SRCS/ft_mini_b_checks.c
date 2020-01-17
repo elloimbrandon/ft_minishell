@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 01:00:19 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/16 19:20:34 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,21 @@ static char    **add_new_line(t_env *env, char **input_copy)
 static void    add_env_var(char **input_copy, t_env *env)
 {
     int i;
+    int k;
     int len;
-    int len2;
 
     i = -1;
+    k = 0;
     len = ft_strlen(input_copy[1]);
-    env->env_copy = add_new_line(env, input_copy);
+    while(input_copy[1][++i])
+    {
+        if(input_copy[1][i] == '=')
+        k = 1;
+    }
+    if (k == 1)
+        env->env_copy = add_new_line(env, input_copy);
+    else
+        ft_printf("%ssetenv: variable has no value: %s\n", KRED, input_copy[1]);
 }
 
 
