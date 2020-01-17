@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:50:09 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 20:29:24 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 01:07:25 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env)
 {
     char *temp;
 
-    temp = ft_memalloc(sizeof(char*));
+    temp = ft_memalloc(sizeof(char*) + 1);
     if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0)
     {
         temp = find_home(env);

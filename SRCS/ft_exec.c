@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 20:11:18 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/15 21:38:23 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,13 @@ void    ft_fork(char *exec, char **input_copy, t_env *env)
     char **env_copy;
     pid_t child_p;
 
-    env_copy = copy_2d_array(env->env_copy);
+    env_copy = copy_2d_array(env->env_copy); // when should i free with
     child_p = fork();
     if(child_p == 0)
         execve(exec, input_copy, env_copy);
     else if (child_p < 0)
         ft_printf("%sshell: could not create process\n", KRED);
+    free(exec); /// added
     wait(&child_p);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 20:02:55 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 01:00:19 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "setenv") == 0)
         ft_printf("%ssetenv: not enough arguments\n", KRED);
-    else if(input_copy[2] && ft_strcmp(input_copy[0], "setenv") == 0)
+    else if(ft_strcmp(input_copy[0], "setenv") == 0 && input_copy[2])
         ft_printf("%ssetenv: too many arguments\n", KRED);
     else if(input_copy[1] && ft_strcmp(input_copy[0], "setenv") == 0)
     {
@@ -159,8 +159,8 @@ void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
         ft_printf("%sunsetenv: not enough arguments\n", KRED);
-    else if(input_copy[2] && ft_strcmp(input_copy[0], "unsetenv") == 0)
-        ft_printf("%sunsetenv: too many arguments\n", KRED);
+    else if(ft_strcmp(input_copy[0], "unsetenv") == 0 && input_copy[2])
+        ft_printf("%ssetenv: too many arguments\n", KRED);
     else if(input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
     {
         if(find_unset_var(input_copy, env) == 0)

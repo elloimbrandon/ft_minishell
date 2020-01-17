@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 01:16:02 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 02:42:21 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 
 int    display_prompt(void)
 {
-    char display[BUFF + 1];
+    char ft_display[BUFF + 1];
     
-    getcwd(display, BUFF);
-    ft_printf("%s%s$>", KGRN, display);
+    getcwd(ft_display, BUFF);
+    ft_printf("%s%s$>", KGRN, ft_display);
     return(0);
 }
 
@@ -42,8 +42,12 @@ char		*get_input(void)
         ft_strclr(buf);
 	}
     if(buf[0] == '\n')
-        temp[0] = *ft_strjoin(temp, buf);
-    free(buf);
+    {
+        //*temp2 = *ft_strjoin(temp, buf);
+        *temp = *ft_strjoin(temp, buf);
+        // temp[0] = *ft_strcat(temp, buf);
+    }
+    free(buf); // possibly make struct to clear temp outside of function??
     return(temp);
 }
 

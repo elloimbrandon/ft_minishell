@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 20:13:19 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 02:00:02 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
         check_env(input_copy[i], input_check);
         check_tilde(input_copy[i], input_check);
         check_qoutes(input_copy[i], input_check);
-        check_set_unset_env(input_copy[i], input_check);
         if(input_check->expansions == 1)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
         if(input_check->tilde == 1)
@@ -53,16 +52,20 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
     }
 }
 
-// void    free_mini(char **input_copy, t_cmd *input_check, t_env *env)
-// {
-//     ft_free_2d(input_copy);
-// }
-
 void    ft_parse_mini(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
-
-    input_copy = ft_strsplit(env->input, ';');
+    int input_length;
+    
+    input_length = ft_strlen(env->input);
+    if(env->input && env->input[0] != '\n')
+        input_copy = ft_strsplit(env->input, ';');
+    else
+    {
+        //free(env->input);
+        return ;
+    }
+    free(env->input);
     input_copy = split_by_space(input_copy);
     ft_parse_input(env, input_check, input_copy);
     ft_zero_out(input_check);
@@ -84,9 +87,12 @@ void    display_get_input(t_env *env, t_cmd *input_check)
     while(!display_prompt())
     {
         env->input = get_input();
-        if(env->input)
+        if(env->input[0] != '\n')
             ft_parse_mini(env, input_check); /// seg faults on ctrl-d
-        free(env->input);
+        //else
+            //ft_printf("%s <-- env->input\n", env->input);
+            //free(env->input);
+        //free(env->input);
     }
 }
 
