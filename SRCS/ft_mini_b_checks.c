@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 19:20:34 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/16 19:24:41 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
     else if(input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
     {
         if(find_unset_var(input_copy, env) == 0)
-            ft_printf("%sunsetenv: var doesnt exist: %s\n", KRED, input_copy[1]);
+            ft_printf("%sunsetenv: variable doesnt exist: %s\n", KRED, input_copy[1]);
     }
 }
 
