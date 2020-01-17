@@ -67,7 +67,6 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env);
 void    ft_hello(void);
 void    sigint_handler(int sig_num);
 void    sigquit_handler(int sig_num);
-void    display_get_input(t_env *env, t_cmd *input_check);
 void    check_bultin(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env);
 void    check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env);

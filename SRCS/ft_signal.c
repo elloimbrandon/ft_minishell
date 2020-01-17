@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 02:42:21 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/16 19:30:25 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,31 +24,6 @@ int    display_prompt(void)
     getcwd(ft_display, BUFF);
     ft_printf("%s%s$>", KGRN, ft_display);
     return(0);
-}
-
-char		*get_input(void)
-{
-	char	*buf;
-    char    *temp;
-	int		result;
-
-    buf = ft_memalloc(sizeof(char*));
-    temp = ft_memalloc(sizeof(char*));
-	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
-	{
-        temp = ft_strjoin(temp, buf);
-        if (!temp)
-			temp = ft_strdup(buf);
-        ft_strclr(buf);
-	}
-    if(buf[0] == '\n')
-    {
-        //*temp2 = *ft_strjoin(temp, buf);
-        *temp = *ft_strjoin(temp, buf);
-        // temp[0] = *ft_strcat(temp, buf);
-    }
-    free(buf); // possibly make struct to clear temp outside of function??
-    return(temp);
 }
 
 /*

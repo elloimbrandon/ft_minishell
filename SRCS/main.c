@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 02:00:02 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/16 20:08:32 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
         input_copy = ft_strsplit(env->input, ';');
     else
     {
-        //free(env->input);
+        free(env->input);
         return ;
     }
     free(env->input);
@@ -81,20 +81,78 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     //free_mini(input_copy, input_check, env);
 }
 
-
-void    display_get_input(t_env *env, t_cmd *input_check)
+char		*get_input(void)
 {
-    while(!display_prompt())
-    {
-        env->input = get_input();
-        if(env->input[0] != '\n')
-            ft_parse_mini(env, input_check); /// seg faults on ctrl-d
-        //else
-            //ft_printf("%s <-- env->input\n", env->input);
-            //free(env->input);
-        //free(env->input);
-    }
+	char	*buf;
+    char    *temp;
+    char    *leak; // added
+	int		result;
+
+    buf = ft_memalloc(sizeof(char*));
+    temp = ft_memalloc(sizeof(char*));
+	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
+	{
+        leak = temp; //aded
+        temp = ft_strjoin(temp, buf);
+        if (!temp)
+			temp = ft_strdup(buf);
+        free(leak); // added 
+        ft_strclr(buf);
+	}
+    if(buf[0] == '\n')
+        *temp = *ft_strjoin(temp, buf);
+    free(buf); // possibly make struct to clear temp outside of function??
+    return(temp);
 }
+
+// static char     *find_nl(char *temp)
+// {
+//     char *str;
+//     char mem_temp;
+//     char *ret;
+
+//     if(temp[0] == '\n')
+//     {
+//         mem_temp = *temp;
+//         *str = '\0';
+//         temp = ft_strndup(temp, str - temp);
+//         ret = ft_strdup(str + 1);
+//         free(temp);
+//         return(ret);
+//     }
+//     return(temp);
+// }
+// char		*get_input(void)
+// {
+// 	char	*buf;
+//     char    *temp;
+//     char    *leak;
+// 	int		result;
+
+//     //buf = ft_memalloc(sizeof(char*));
+//     buf = ft_strnew(1);
+//     temp = ft_memalloc(sizeof(char*));
+// 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
+// 	{
+//         leak = temp;
+//         temp = ft_strjoin(temp, buf);
+//         if (!temp)
+// 			temp = ft_strdup(buf);
+//         free(leak);
+//         ft_bzero(buf, 1);
+// 	}
+
+//     if(temp[0] == '\n')
+//     {
+//         temp = find_nl(temp);
+//         //*temp2 = *ft_strjoin(temp, buf);
+//         //*temp = *ft_strjoin(temp, buf);
+//         // temp[0] = *ft_strcat(temp, buf);
+//     }
+//     free(buf); // possibly make struct to clear temp outside of function??
+//     return(temp);
+// }
+
 
 int        main(void)
 {
@@ -109,7 +167,16 @@ int        main(void)
     ft_hello();
     signal(SIGQUIT, sigquit_handler);
     signal(SIGINT, sigint_handler);
-    display_get_input(env, input_check);
+    while(!display_prompt())
+    {
+        env->input = get_input();
+        if(env->input[0] != '\n')
+            ft_parse_mini(env, input_check); /// seg faults on ctrl-d
+        //else
+            //ft_printf("%s <-- env->input\n", env->input);
+            //free(env->input);
+        //free(env->input);
+    }
     ft_free_2d(env->env_copy); // might need to move
     return(0);
 }
