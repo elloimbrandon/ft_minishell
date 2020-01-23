@@ -6,7 +6,7 @@
 /*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:18:44 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 00:42:48 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/23 00:55:39 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ char	**copy_2d_array(char **str)
 	len = 0;
 	while (str[len])
 		len++;
-	//len--;
-	temp = ft_memalloc(sizeof(char*) * (len + 1));
+	temp = ft_memalloc(sizeof(char*) * (len + 1)); // might not need the 1?
 	temp[len] = NULL;
 	while (str[++i])
 		temp[i] = ft_strdup(str[i]);
