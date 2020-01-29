@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 00:54:34 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 22:23:27 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
         check_tilde(input_copy[i], input_check);
         check_qoutes(input_copy[i], input_check);
         if(input_check->expansions == 1)
+        {
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
+            input_check->expansions = 0;
+        }
         if(input_check->tilde == 1)
         {
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
@@ -94,14 +97,13 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     if (ft_strcmp(input_copy[0], "cat") == 0)
         ft_printf("\n");
     ft_free_2d(input_copy);
-    //free_mini(input_copy, input_check, env);
 }
 
 static void		get_input(t_env *env)
 {
     char    *buf;
     char    *temp;
-    char    *leak; // added
+    char    *leak;
     int     count;
 	int		result;
 
@@ -111,7 +113,7 @@ static void		get_input(t_env *env)
 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
 	{
         leak = temp;
-        temp = ft_strjoin(temp, buf); // try strcat again?
+        temp = ft_strjoin(temp, buf);
         free(leak);
         count = 1;
 	}
@@ -138,6 +140,7 @@ int        main(void)
     signal(SIGINT, sigint_handler);
     while(!display_prompt())
     {
+        // maybe allocate env var here and free after
         // env->input = get_input();
         get_input(env);
         if(env->input[0] != '\n')
@@ -145,6 +148,8 @@ int        main(void)
         else
             free(env->input);
     }
-    ft_free_2d(env->env_copy); // might need to move
+    ft_free_2d(env->env_copy); // might need to move // free env var copy
+    free(env); // testing 
+    free(input_check); // testing
     return(0);
 }

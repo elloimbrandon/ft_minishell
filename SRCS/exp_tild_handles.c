@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 18:55:54 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/28 19:52:46 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void    handle_env(char *input_copy, t_cmd *input_check, t_env *env)
             temp = ft_strcat(temp, "=");
             find_env_var(temp, input_check, env);
             free(temp);
+            break ;
         }
     }
 }
@@ -73,15 +74,6 @@ void    find_env_var(char *temp, t_cmd *input_check, t_env *env)
     while(env->env_copy[++i])
     {
         if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
-        {
-            // if(input_check->unset_e == 1)
-            // {
-            //     ft_strdel(&env->env_copy[i]);
-            //     env->env_copy[i] = NULL;
-            //     input_check->unset_e = 0;
-            // }
-            // else
-                env->exp_hold = ft_strdup(env->env_copy[i] + len);
-        }
+            env->exp_hold = ft_strdup(env->env_copy[i] + len);
     }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:50:09 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 00:55:48 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 22:23:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
         handle_env(input_copy, input_check, env);
         if(env->exp_hold)
         {
+            free(input_copy); // free input_copy str
             ret = ft_strdup(env->exp_hold);
             free(env->exp_hold);
             return(ret);
@@ -102,6 +103,7 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
         handle_tilde(input_copy, input_check, env);
         if(env->tilde_hold)
         {
+            free(input_copy); // free input_copy str
             ret = ft_strdup(env->tilde_hold);
             free(env->tilde_hold);
             return(ret);

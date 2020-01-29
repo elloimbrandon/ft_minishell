@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 01:16:07 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 17:33:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** new 2d array so we can work with array's without spaces
 */
 
-static int		w_dcount(char *words, int d)
+static int		w_count(char *words, int d)
 {
 	int count;
 	int i;
@@ -48,7 +48,7 @@ static int     ft_count_words_2d(char **s)
     total_wrds = 0;
     while(s[++i])
     {
-        wrds_in_string = w_dcount(s[i], ' ');
+        wrds_in_string = w_count(s[i], ' ');
         total_wrds += wrds_in_string;
     }
     return (wrds_in_string);
