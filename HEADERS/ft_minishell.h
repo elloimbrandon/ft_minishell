@@ -57,7 +57,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
 int     display_prompt(void);
 int		ft_size_2d(char **arr);
 int    ft_same_cmd(char *exec, char **input_copy);
-char		*get_input(void);
+// char		*get_input(void);
 char    **split_by_space(char **input_copy);
 char    *get_path(char *hold, t_env *env);
 char    *build_path(char *input_copy, char *path);

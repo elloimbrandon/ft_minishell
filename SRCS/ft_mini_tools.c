@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 00:22:56 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 17:33:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,20 @@
 ** new 2d array so we can work with array's without spaces
 */
 
-static int		w_dcount(char *words, int delim)
+static int		w_count(char *words, int d)
 {
 	int count;
 	int i;
+
 	i = 0;
 	count = 0;
 	while (words[i])
 	{
-		if (words[i] == delim)
+		if (words[i] == d)
 			i++;
 		else
 		{
-			while (words[i] && words[i] != delim)
+			while (words[i] && words[i] != d)
 				i++;
 			count++;
 		}
@@ -37,59 +38,47 @@ static int		w_dcount(char *words, int delim)
 	return (count);
 }
 
-static int     ft_count_words_2d(char **strings)
+static int     ft_count_words_2d(char **s)
 {
-    int idx;
-    int words_in_string;
-    int total_words;
+    int i;
+    int wrds_in_string;
+    int total_wrds;
 
-    idx = -1;
-    total_words = 0;
-    while(strings[++idx])
+    i = -1;
+    total_wrds = 0;
+    while(s[++i])
     {
-        words_in_string = w_dcount(strings[idx], ' ');
-        total_words += words_in_string;
+        wrds_in_string = w_count(s[i], ' ');
+        total_wrds += wrds_in_string;
     }
-    return (words_in_string);
+    return (wrds_in_string);
 }
 
 char    **split_by_space(char **input_copy)
 {
+    char **temp;
     char **ret;
-    char **flat;
+    int total_wrds;
     int i;
     int j;
     int k;
 
     i = 0;
     k = -1;
-    int total_words = ft_count_words_2d(input_copy);
-    flat = ft_memalloc(sizeof(char**) * (total_words + 1));
-    flat[total_words] = NULL;
+    total_wrds = ft_count_words_2d(input_copy);
+    ret = ft_memalloc(sizeof(char**) * (total_wrds + 1));
+    ret[total_wrds] = NULL;
     while(input_copy[i])
     {
-        ret = ft_strsplit(input_copy[i++], ' ');
+        temp = ft_strsplit(input_copy[i++], ' ');
         j = -1;
-        while(ret[++j])
-            flat[++k] = ret[j];
-        free(ret);
+        while(temp[++j])
+            ret[++k] = temp[j];
+        free(temp);
     }
     ft_free_2d(input_copy);
-    return(flat);
+    return(ret);
 }
-
-// char    **split_by_space(char **input_copy)
-// {
-//     char **ret;
-//     int i;
-
-//     i = 0;
-    
-//     while(input_copy[i])
-//         ret = ft_strsplit(input_copy[i++], ' ');
-//     ft_free_2d(input_copy);
-//     return(ret);
-// }
 
 int		ft_size_2d(char **arr)
 {

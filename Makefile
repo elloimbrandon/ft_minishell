@@ -18,6 +18,7 @@ clean:
 
 fclean: clean
 	@make fclean -C $(LIBFT)
+	@rm -rf *.dSYM
 
 re: fclean all
 

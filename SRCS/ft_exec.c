@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exec.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 21:38:23 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 17:39:18 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env)
     if(hold)
         check_exec(hold, input_copy, env);
     else
+    {
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
+        free(hold); //added
+    }
 }
 
 void    check_exec(char *hold, char **input_copy, t_env *env)
@@ -34,7 +37,8 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
     k = 0;
     i = -1;
     exec = NULL;
-    path = ft_strsplit(hold , ':');
+    path = ft_strsplit(hold, ':');
+    free(hold); // added
     while(path[++i])
     {
         exec = build_path(input_copy[0], path[i]);
@@ -96,6 +100,7 @@ void    ft_fork(char *exec, char **input_copy, t_env *env)
     else if (child_p < 0)
         ft_printf("%sshell: could not create process\n", KRED);
     free(exec); /// added
+    ft_free_2d(env_copy); // added
     wait(&child_p);
 }
 

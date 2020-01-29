@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 19:24:41 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/23 01:35:59 by brandonf         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ static int     unset_env(char *temp, t_env *env, int k)
     {
         if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
         {
-            ft_strdel(&env->env_copy[i]);
+            //ft_strdel(&env->env_copy[i]); // changed 
+            free(env->env_copy[i]);
             k = 1;
         }
         if(k == 1 && env->env_copy)

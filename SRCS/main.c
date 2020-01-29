@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 20:08:32 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/28 17:44:42 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,30 @@
 /*
 ** to do's: break up functions into files, norm, check for leaks and fix envunset free problem /// think about getting rid of addenv
 */
+
+// static char		*get_input(void)
+// {
+// 	char	*buf;
+//     char    *temp;
+//     char    *leak; // added
+// 	int		result;
+
+//     buf = ft_memalloc(sizeof(char*) + 1);
+//     temp = ft_memalloc(sizeof(char*) + 1);
+// 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
+// 	{
+//         leak = temp; //added
+//         temp = ft_strjoin(temp, buf);
+//         if (!temp)
+// 			temp = ft_strdup(buf);
+//         free(leak); // added 
+//         ft_strclr(buf);
+// 	}
+//     if(buf[0] == '\n')
+//         *temp = *ft_strjoin(temp, buf);
+//     free(buf); // possibly make struct to clear temp outside of function??
+//     return(temp);
+// }
 
 void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
@@ -55,16 +79,8 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
 void    ft_parse_mini(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
-    int input_length;
-    
-    input_length = ft_strlen(env->input);
-    if(env->input && env->input[0] != '\n')
-        input_copy = ft_strsplit(env->input, ';');
-    else
-    {
-        free(env->input);
-        return ;
-    }
+
+    input_copy = ft_strsplit(env->input, ';');
     free(env->input);
     input_copy = split_by_space(input_copy);
     ft_parse_input(env, input_check, input_copy);
@@ -78,81 +94,35 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     if (ft_strcmp(input_copy[0], "cat") == 0)
         ft_printf("\n");
     ft_free_2d(input_copy);
+    //ft_free_2d(env->env_copy); //dfddfds
     //free_mini(input_copy, input_check, env);
 }
 
-char		*get_input(void)
+static void		get_input(t_env *env)
 {
-	char	*buf;
+    char    *buf;
     char    *temp;
     char    *leak; // added
+    int     count;
 	int		result;
 
-    buf = ft_memalloc(sizeof(char*));
-    temp = ft_memalloc(sizeof(char*));
+    count = 0;
+    buf = ft_memalloc(sizeof(char*) + 1);
+    temp = ft_memalloc(sizeof(char*) + 1);
 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
 	{
-        leak = temp; //aded
-        temp = ft_strjoin(temp, buf);
-        if (!temp)
-			temp = ft_strdup(buf);
-        free(leak); // added 
-        ft_strclr(buf);
+        leak = temp;
+        temp = ft_strjoin(temp, buf); // try strcat again?
+        free(leak);
+        count = 1;
 	}
-    if(buf[0] == '\n')
-        *temp = *ft_strjoin(temp, buf);
-    free(buf); // possibly make struct to clear temp outside of function??
-    return(temp);
+    if(buf[0] == '\n' && count != 1)
+        env->input = ft_strdup(buf);
+    else
+        env->input = ft_strdup(temp);
+    free(buf);
+    free(temp);
 }
-
-// static char     *find_nl(char *temp)
-// {
-//     char *str;
-//     char mem_temp;
-//     char *ret;
-
-//     if(temp[0] == '\n')
-//     {
-//         mem_temp = *temp;
-//         *str = '\0';
-//         temp = ft_strndup(temp, str - temp);
-//         ret = ft_strdup(str + 1);
-//         free(temp);
-//         return(ret);
-//     }
-//     return(temp);
-// }
-// char		*get_input(void)
-// {
-// 	char	*buf;
-//     char    *temp;
-//     char    *leak;
-// 	int		result;
-
-//     //buf = ft_memalloc(sizeof(char*));
-//     buf = ft_strnew(1);
-//     temp = ft_memalloc(sizeof(char*));
-// 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
-// 	{
-//         leak = temp;
-//         temp = ft_strjoin(temp, buf);
-//         if (!temp)
-// 			temp = ft_strdup(buf);
-//         free(leak);
-//         ft_bzero(buf, 1);
-// 	}
-
-//     if(temp[0] == '\n')
-//     {
-//         temp = find_nl(temp);
-//         //*temp2 = *ft_strjoin(temp, buf);
-//         //*temp = *ft_strjoin(temp, buf);
-//         // temp[0] = *ft_strcat(temp, buf);
-//     }
-//     free(buf); // possibly make struct to clear temp outside of function??
-//     return(temp);
-// }
-
 
 int        main(void)
 {
@@ -169,14 +139,15 @@ int        main(void)
     signal(SIGINT, sigint_handler);
     while(!display_prompt())
     {
-        env->input = get_input();
+        // env->input = get_input();
+        get_input(env);
         if(env->input[0] != '\n')
             ft_parse_mini(env, input_check); /// seg faults on ctrl-d
-        //else
-            //ft_printf("%s <-- env->input\n", env->input);
-            //free(env->input);
-        //free(env->input);
+        else
+            free(env->input);
     }
     ft_free_2d(env->env_copy); // might need to move
+    free(env);
+    free(input_check);
     return(0);
 }
