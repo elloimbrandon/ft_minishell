@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_print.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:34:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 00:39:09 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/29 20:59:03 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int    ft_same_cmd(char *exec, char **input_copy)
     temp = ft_strdup(exec + len);
     if(ft_strcmp(input_copy[0], temp) != 0)
     {
+        free(exec);// added
         free(temp);
         return(1);
     }

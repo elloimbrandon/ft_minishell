@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 16:48:30 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 20:59:22 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
         exec = build_path(input_copy[0], path[i]);
         if(lstat(exec, &buf) != 1)
         {
-            if(ft_same_cmd(exec, input_copy) == 1)
-                exec = ft_strdup(input_copy[0]);
+            // if(ft_same_cmd(exec, input_copy) == 1)
+            //     exec = ft_strdup(input_copy[0]);
             if (access(exec, X_OK) == 0)
             {
                 ft_fork(exec, input_copy, env);

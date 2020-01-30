@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 18:22:57 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 21:39:51 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
     int i;
 
     i = -1;
-    if (!input_copy)
-        return ;
     while(input_copy[++i])
     {
         check_env(input_copy[i], input_check);
@@ -47,9 +45,15 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
         }
         if(input_check->tilde == 1)
         {
-            input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
             if(!input_copy[1])
-                chdir(input_copy[0]);
+            {
+                handle_tilde(input_copy[i], input_check, env);
+                chdir(env->tilde_hold);
+                free(env->tilde_hold);
+                input_check->executed = 1;
+            }
+            else
+                input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
             input_check->tilde = 0;
         }
     }
@@ -64,7 +68,7 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     free(env->input);
     while (input)
     {
-        input_copy = ft_memalloc(sizeof(char **) * 2);
+        input_copy = ft_memalloc(sizeof(char **) + 2); // *
         input_copy[1] = NULL;
         input_copy[0] = *input;
         if (!(input_copy = split_by_space(input_copy)))
@@ -126,7 +130,7 @@ int        main(void)
     {
         get_input(env);
         if(env->input[0] != '\n')
-            ft_parse_mini(env, input_check); /// seg faults on ctrl-d
+            ft_parse_mini(env, input_check);
         else
             free(env->input);
     }

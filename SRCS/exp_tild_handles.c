@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 18:18:28 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 20:51:28 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void    handle_tilde(char *input_copy, t_cmd *input_check, t_env *env)
     {
         if(ft_strrchr(input_copy, '~'))
         {
-            ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
             temp = ft_strdup(input_copy);
             get_home_path(temp, env);
             free(temp);
@@ -45,7 +44,7 @@ void    handle_env(char *input_copy, t_cmd *input_check, t_env *env)
             else
                 ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
             if(input_copy[ft_strlen(input_copy) - 1] == '"')
-                temp = ft_strndup(input_copy, ft_strlen(input_copy) - 1); /// still needs work
+                temp = ft_strndup(input_copy, ft_strlen(input_copy) - 1);
             else
                 temp = ft_strdup(input_copy);
             temp = ft_strcat(temp, "=");
@@ -67,6 +66,7 @@ void    get_home_path(char *temp, t_env *env)
         {
             temp = ft_strdup(env->env_copy[i] + 5);
             env->tilde_hold = ft_strdup(temp);
+            break ;
         }
     }
 }
