@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/28 17:33:13 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 01:53:34 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,17 @@ static int		w_count(char *words, int d)
 	return (count);
 }
 
-static int     ft_count_words_2d(char **s)
+int     ft_count_words_2d(char **s)
 {
     int i;
     int wrds_in_string;
-    int total_wrds;
 
     i = -1;
-    total_wrds = 0;
+    if (!s)
+        return (-1);
+    wrds_in_string = -1;
     while(s[++i])
-    {
         wrds_in_string = w_count(s[i], ' ');
-        total_wrds += wrds_in_string;
-    }
     return (wrds_in_string);
 }
 
@@ -66,6 +64,8 @@ char    **split_by_space(char **input_copy)
     i = 0;
     k = -1;
     total_wrds = ft_count_words_2d(input_copy);
+    if (total_wrds <= 0)
+        return (NULL);
     ret = ft_memalloc(sizeof(char**) * (total_wrds + 1));
     ret[total_wrds] = NULL;
     while(input_copy[i])

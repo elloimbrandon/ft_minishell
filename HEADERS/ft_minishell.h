@@ -26,7 +26,7 @@
 # define KWHT  "\x1B[37m"
 
 # define BUFF 2048
-
+#include <stdio.h> /////////////////// j ghjjvguvgfguyvfgug
 /*
 ** Structs
 */
@@ -35,7 +35,7 @@ typedef struct		s_env
 {
     char            **env_copy; // copy of env varibles
     char            *input; // command line input
-    char            *output;
+    char            *output; // might not need
     char            *exp_hold; // holds env expansion str
     char            *tilde_hold; // hold home path
 }					t_env;
@@ -56,6 +56,7 @@ typedef struct      s_cmd // think of multiple and path for cd ls commands
 
 int     display_prompt(void);
 int		ft_size_2d(char **arr);
+int     ft_count_words_2d(char **s);
 int    ft_same_cmd(char *exec, char **input_copy);
 // char		*get_input(void);
 char    **split_by_space(char **input_copy);
@@ -89,7 +90,7 @@ void    ft_remove_qoutes(char *input_copy, t_cmd *input_check);
 void    ft_print_echo(char **input_copy, t_cmd *input_check);
 void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env);
 void    ft_already_exc(t_cmd *input_check, char **input_copy);
-void    ft_zero_out(t_cmd *input_check);
+//void    ft_zero_out(t_cmd *input_check);
 void    ft_print_2d(char **two_d);
 void    ft_fork(char *exec, char **input_copy, t_env *env);
 void    ft_cd(char **input_copy, t_cmd *input_check, t_env *env);

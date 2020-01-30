@@ -6,10 +6,14 @@ FLAGS = -Wall -Werror -Wextra
 
 LIBFT = libft
 
+
 all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBFT)
+	make msh
+
+msh:
 	@gcc $(SRCS) -L $(LIBFT) -lft -o $(NAME)
 
 clean:

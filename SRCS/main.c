@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/28 22:23:27 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 18:22:57 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,10 @@
 /*
 ** test with csh
 */
-
-/*
-** to do's: break up functions into files, norm, check for leaks and fix envunset free problem /// think about getting rid of addenv
-*/
-
-// static char		*get_input(void)
-// {
-// 	char	*buf;
-//     char    *temp;
-//     char    *leak; // added
-// 	int		result;
-
-//     buf = ft_memalloc(sizeof(char*) + 1);
-//     temp = ft_memalloc(sizeof(char*) + 1);
-// 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
-// 	{
-//         leak = temp; //added
-//         temp = ft_strjoin(temp, buf);
-//         if (!temp)
-// 			temp = ft_strdup(buf);
-//         free(leak); // added 
-//         ft_strclr(buf);
-// 	}
-//     if(buf[0] == '\n')
-//         *temp = *ft_strjoin(temp, buf);
-//     free(buf); // possibly make struct to clear temp outside of function??
-//     return(temp);
-// }
-
+ 
 void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
+    input_check->printed_errors = 0;
     check_cd_cmd(input_copy, input_check, env);
     check_env_cmd(input_copy, input_check, env);
     check_pwd_cmd(input_copy, input_check, env);
@@ -60,6 +33,8 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
     int i;
 
     i = -1;
+    if (!input_copy)
+        return ;
     while(input_copy[++i])
     {
         check_env(input_copy[i], input_check);
@@ -75,6 +50,7 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
             if(!input_copy[1])
                 chdir(input_copy[0]);
+            input_check->tilde = 0;
         }
     }
 }
@@ -82,21 +58,30 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
 void    ft_parse_mini(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
+    char **input;
 
-    input_copy = ft_strsplit(env->input, ';');
+    input = ft_strsplit(env->input, ';');
     free(env->input);
-    input_copy = split_by_space(input_copy);
-    ft_parse_input(env, input_check, input_copy);
-    ft_zero_out(input_check);
-    check_bultin(input_copy, input_check, env);
-    ft_already_exc(input_check, input_copy);
-    ft_local_exec(input_copy, input_check, env);
-    if(input_check->executed == 0)
-        check_system_cmd(input_copy, input_check, env);
-    input_check->executed = 0;
-    if (ft_strcmp(input_copy[0], "cat") == 0)
-        ft_printf("\n");
-    ft_free_2d(input_copy);
+    while (input)
+    {
+        input_copy = ft_memalloc(sizeof(char **) * 2);
+        input_copy[1] = NULL;
+        input_copy[0] = *input;
+        if (!(input_copy = split_by_space(input_copy)))
+            return ;
+        ft_parse_input(env, input_check, input_copy);
+        check_bultin(input_copy, input_check, env);
+        ft_already_exc(input_check, input_copy);
+        ft_local_exec(input_copy, input_check, env);
+        if(input_check->executed == 0)
+            check_system_cmd(input_copy, input_check, env);
+        input_check->executed = 0;
+        if (ft_strcmp(input_copy[0], "cat") == 0)
+            ft_printf("\n");
+        ft_free_2d(input_copy);
+        ++input;
+    }
+    ft_free_2d(input);
 }
 
 static void		get_input(t_env *env)
@@ -108,6 +93,7 @@ static void		get_input(t_env *env)
 	int		result;
 
     count = 0;
+    env->input = NULL;
     buf = ft_memalloc(sizeof(char*) + 1);
     temp = ft_memalloc(sizeof(char*) + 1);
 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
@@ -129,9 +115,7 @@ int        main(void)
 {
     t_env   *env;
     t_cmd   *input_check;
-    char    *temp;
 
-    temp = NULL;
     env = ft_memalloc(sizeof(t_env));
     input_check = ft_memalloc(sizeof(t_cmd));
     init_structs(env, input_check);
@@ -140,16 +124,14 @@ int        main(void)
     signal(SIGINT, sigint_handler);
     while(!display_prompt())
     {
-        // maybe allocate env var here and free after
-        // env->input = get_input();
         get_input(env);
         if(env->input[0] != '\n')
             ft_parse_mini(env, input_check); /// seg faults on ctrl-d
         else
             free(env->input);
     }
-    ft_free_2d(env->env_copy); // might need to move // free env var copy
-    free(env); // testing 
-    free(input_check); // testing
+    ft_free_2d(env->env_copy); // free env var copy
+    free(env); 
+    free(input_check);
     return(0);
 }

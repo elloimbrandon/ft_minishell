@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:40:19 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/28 19:52:46 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 18:18:28 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,14 @@ void    handle_env(char *input_copy, t_cmd *input_check, t_env *env)
     {
         if(ft_strrchr(input_copy, '$'))
         {
-            ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
-            temp = ft_strdup(input_copy);
+            if(input_copy[0] == '"')
+                ft_memmove(&input_copy[i], &input_copy[i + 2], ft_strlen(input_copy) - i);
+            else
+                ft_memmove(&input_copy[i], &input_copy[i + 1], ft_strlen(input_copy) - i);
+            if(input_copy[ft_strlen(input_copy) - 1] == '"')
+                temp = ft_strndup(input_copy, ft_strlen(input_copy) - 1); /// still needs work
+            else
+                temp = ft_strdup(input_copy);
             temp = ft_strcat(temp, "=");
             find_env_var(temp, input_check, env);
             free(temp);

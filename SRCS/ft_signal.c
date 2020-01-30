@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 01:17:09 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/28 23:06:04 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int    display_prompt(void)
 {
-    char ft_display[BUFF + 1];
+    char ft_display[BUFF];// + 1];
     
     getcwd(ft_display, BUFF);
     ft_printf("%s%s$>", KGRN, ft_display);
