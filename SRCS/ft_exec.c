@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 20:59:22 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 21:46:02 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
         exec = build_path(input_copy[0], path[i]);
         if(lstat(exec, &buf) != 1)
         {
-            // if(ft_same_cmd(exec, input_copy) == 1)
-            //     exec = ft_strdup(input_copy[0]);
             if (access(exec, X_OK) == 0)
             {
                 ft_fork(exec, input_copy, env);
@@ -89,17 +87,18 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
 
 void    ft_fork(char *exec, char **input_copy, t_env *env)
 {
-    char **env_copy;
+    // char **env_copy;
     pid_t child_p;
 
-    env_copy = copy_2d_array(env->env_copy);
+    // env_copy = copy_2d_array(env->env_copy);
     child_p = fork();
     if(child_p == 0)
-        execve(exec, input_copy, env_copy);
+        // execve(exec, input_copy, env_copy);
+        execve(exec, input_copy, env->env_copy);
     else if (child_p < 0)
         ft_printf("%sshell: could not create process\n", KRED);
     free(exec); // added
-    ft_free_2d(env_copy);
+    // ft_free_2d(env_copy);
     wait(&child_p);
 }
 
