@@ -3,6 +3,7 @@ SRCS = ./SRCS/main.c ./SRCS/ft_signal.c ./SRCS/ft_mini_init.c ./SRCS/ft_mini_too
 NAME = minishell
 
 FLAGS = -Wall -Werror -Wextra
+#FLAGS = -g 
 
 LIBFT = libft
 
@@ -14,7 +15,7 @@ $(NAME):
 	make msh
 
 msh:
-	@gcc $(SRCS) -L $(LIBFT) -lft -o $(NAME)
+	@gcc $(SRCS) $(FLAGS) -L $(LIBFT) -lft -o $(NAME)
 
 clean:
 	@rm -rf $(NAME)

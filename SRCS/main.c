@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 22:20:04 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/30 23:51:26 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,29 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
 {
     char **input_copy;
     char **input;
+    int i;
+    int total_wrds;
 
-    input_copy = NULL; // might not need
+    i = -1;
     if(!(input = ft_strsplit(env->input, ';')))
-        return ;
-    free(env->input);
-    while (input)
     {
-        input_copy = ft_memalloc(sizeof(char **) * 2);
-        input_copy[1] = NULL;
-        input_copy[0] = *input;
-        if (!(input_copy = split_by_space(input_copy)))
+        free(env->input);
+        return ;
+    }
+    free(env->input);
+    total_wrds = ft_count_words_2d(input);
+    if (total_wrds <= 0)
+    {
+        ft_free_2d(input);
+        return ;
+    }
+    while (input[++i])
+    {
+        if(!(input_copy = ft_strsplit(input[i], ' ')))
+        {
+            ft_free_2d(input_copy);
             return ;
+        }
         ft_parse_input(env, input_check, input_copy);
         check_bultin(input_copy, input_check, env);
         ft_already_exc(input_check, input_copy);
@@ -85,12 +96,11 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
         if (ft_strcmp(input_copy[0], "cat") == 0)
             ft_printf("\n");
         ft_free_2d(input_copy);
-        ++input;
     }
     ft_free_2d(input);
 }
 
-static void		get_input(t_env *env)
+int		get_input(t_env *env)
 {
     char    *buf;
     char    *temp;
@@ -99,7 +109,6 @@ static void		get_input(t_env *env)
 	int		result;
 
     count = 0;
-    env->input = NULL;
     buf = ft_memalloc(sizeof(char*) + 1);
     temp = ft_memalloc(sizeof(char*) + 1);
 	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
@@ -115,6 +124,7 @@ static void		get_input(t_env *env)
         env->input = ft_strdup(temp);
     free(buf);
     free(temp);
+    return(result == 0 ? 1: 0);
 }
 
 int        main(void)
@@ -128,16 +138,21 @@ int        main(void)
     ft_hello();
     signal(SIGQUIT, sigquit_handler);
     signal(SIGINT, sigint_handler);
-    while(!display_prompt())
+    while(!display_prompt()) 
     {
-        get_input(env);
-        if(env->input[0] != '\n')
-            ft_parse_mini(env, input_check);
+        if(get_input(env) == 0)
+        {
+            if(env->input[0] != '\n')
+                ft_parse_mini(env, input_check);
+            else
+                free(env->input);
+        }
         else
+        {
             free(env->input);
+            ft_printf("\n");
+        }
     }
-    ft_free_2d(env->env_copy); // free env var copy
-    free(env); 
-    free(input_check);
+    ft_free_2d(env->env_copy);
     return(0);
 }

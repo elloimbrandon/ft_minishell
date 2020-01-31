@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   copy_2d_array.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/27 18:18:44 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 00:55:39 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/30 21:16:13 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ char	**copy_2d_array(char **str)
 
 	i = -1;
 	len = 0;
+	if(!str)
+		return(NULL);
 	while (str[len])
 		len++;
 	temp = ft_memalloc(sizeof(char*) * (len + 1)); // might not need the 1?

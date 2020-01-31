@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:50:09 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/29 21:10:19 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/30 22:54:28 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,25 @@ void     check_cd_dir(char **input_copy, t_cmd *input_check)
     }
     else
         chdir(input_copy[1]);
+    closedir(dir);
 }
 
 void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env)
 {
     char *temp;
 
-    temp = ft_memalloc(sizeof(char*) + 1);
     if(!input_copy[1] || ft_strcmp(input_copy[1], "--") == 0)
     {
         temp = find_home(env);
         chdir(temp);
-        //free(temp);
+        free(temp);
     }
     else if (ft_strcmp(input_copy[1], "-") == 0)
     {
         temp = find_old_pwd(env);
         chdir(temp);
         ft_printf("~%s\n", temp);
-        //free(temp);
+        free(temp);
     }
     else if(input_copy[1] && !input_copy[2])
         check_cd_dir(input_copy, input_check);
@@ -56,7 +56,6 @@ void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env)
         print_errors(input_copy[1], input_check, 3);
     else
         print_errors(input_copy[1], input_check, 3);
-    free(temp); // added
 }
 
 void   check_env(char *input_copy, t_cmd *input_check)
@@ -93,9 +92,8 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
         handle_env(input_copy, input_check, env);
         if(env->exp_hold)
         {
-            free(input_copy); // free input_copy str
+            free(input_copy);
             ret = ft_strdup(env->exp_hold);
-            if(input_check->qoutes % 2 == 0 || input_check->qoutes == 0)
                 free(env->exp_hold);
             return(ret);
         }
@@ -105,7 +103,7 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
         handle_tilde(input_copy, input_check, env);
         if(env->tilde_hold)
         {
-            free(input_copy); // free input_copy str
+            free(input_copy);
             ret = ft_strdup(env->tilde_hold);
             free(env->tilde_hold);
             return(ret);
