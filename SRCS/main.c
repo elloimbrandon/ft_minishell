@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/30 23:51:26 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:35:18 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void     check_bultin(char **input_copy, t_cmd *input_check, t_env *env)
 {
     input_check->printed_errors = 0;
     check_cd_cmd(input_copy, input_check, env);
-    check_env_cmd(input_copy, input_check, env);
-    check_pwd_cmd(input_copy, input_check, env);
-    check_exit_cmd(input_copy, input_check, env);
-    check_echo_cmd(input_copy, input_check, env);
-    check_setenv(input_copy, input_check, env);
-    check_unsetenv(input_copy,input_check,env);
+    check_env_cmd(input_copy, env);
+    check_pwd_cmd(input_copy, input_check);
+    check_exit_cmd(input_copy);
+    check_echo_cmd(input_copy, input_check);
+    check_setenv(input_copy, env);
+    check_unsetenv(input_copy, env);
 }
 
 void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
@@ -38,6 +38,7 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
         check_env(input_copy[i], input_check);
         check_tilde(input_copy[i], input_check);
         check_qoutes(input_copy[i], input_check);
+        // make new function for below
         if(input_check->expansions == 1)
         {
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
@@ -47,7 +48,7 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
         {
             if(!input_copy[1])
             {
-                handle_tilde(input_copy[i], input_check, env);
+                handle_tilde(input_copy[i], env);
                 chdir(env->tilde_hold);
                 free(env->tilde_hold);
                 input_check->executed = 1;
@@ -79,6 +80,7 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
         ft_free_2d(input);
         return ;
     }
+    //make new function
     while (input[++i])
     {
         if(!(input_copy = ft_strsplit(input[i], ' ')))
@@ -91,9 +93,9 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
         ft_already_exc(input_check, input_copy);
         ft_local_exec(input_copy, input_check, env);
         if(input_check->executed == 0)
-            check_system_cmd(input_copy, input_check, env);
+            check_system_cmd(input_copy, env);
         input_check->executed = 0;
-        if (ft_strcmp(input_copy[0], "cat") == 0)
+        if (ft_strcmp(input_copy[1], "author") == 0)
             ft_printf("\n");
         ft_free_2d(input_copy);
     }

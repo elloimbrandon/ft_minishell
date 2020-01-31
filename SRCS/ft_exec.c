@@ -6,17 +6,17 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:06:26 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:38:32 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 
-void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void    check_system_cmd(char **input_copy, t_env *env)
 {
     char *hold;
     
-    hold = get_path(hold, env);
+    hold = get_path(env);
     if(hold)
         check_exec(hold, input_copy, env);
     else
@@ -50,7 +50,7 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
         }
         free(exec);
     }
-    ft_free_2d(path); //added // free path
+    ft_free_2d(path);
     if (k == 0 && ft_strcmp(input_copy[0], "\n") != 0)
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
 }
@@ -60,9 +60,6 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
     char *exec;
     struct stat buf;
 
-    exec = NULL;
-    if (!input_copy)
-        return ;
     if (ft_strchr(input_copy[0], '/') != NULL && ft_strchr(input_copy[0], '.') != NULL)
     {
         if (lstat(input_copy[0], &buf) != -1)
@@ -87,18 +84,14 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
 
 void    ft_fork(char *exec, char **input_copy, t_env *env)
 {
-    // char **env_copy;
     pid_t child_p;
 
-    // env_copy = copy_2d_array(env->env_copy);
     child_p = fork();
     if(child_p == 0)
-        // execve(exec, input_copy, env_copy);
         execve(exec, input_copy, env->env_copy);
     else if (child_p < 0)
         ft_printf("%sshell: could not create process\n", KRED);
-    free(exec); // added
-    // ft_free_2d(env_copy);
+    free(exec);
     wait(&child_p);
 }
 

@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:50:09 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/30 22:54:28 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 01:05:30 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ void     check_cd_dir(char **input_copy, t_cmd *input_check)
             print_errors(input_copy[1], input_check, 1);
     }
     else
+    {
         chdir(input_copy[1]);
-    closedir(dir);
+        closedir(dir);
+    }
 }
 
 void     ft_cd(char **input_copy, t_cmd *input_check, t_env *env)
@@ -89,18 +91,18 @@ char    *exp_tilde_check(char *input_copy, t_cmd *input_check, t_env *env)
     ret = NULL;
     if(input_check->expansions == 1 && input_copy[1])
     {
-        handle_env(input_copy, input_check, env);
+        handle_env(input_copy, env);
         if(env->exp_hold)
         {
             free(input_copy);
             ret = ft_strdup(env->exp_hold);
-                free(env->exp_hold);
+            free(env->exp_hold);
             return(ret);
         }
     }
     if(input_check->tilde == 1)
     {
-        handle_tilde(input_copy, input_check, env);
+        handle_tilde(input_copy, env);
         if(env->tilde_hold)
         {
             free(input_copy);

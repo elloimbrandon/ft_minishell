@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:05:14 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:10:58 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int     ft_count_words_2d(char **s)
     i = -1;
     if (!s)
         return (-1);
-    // wrds_in_string = -1;
     wrds_in_string = 0;
     while(s[++i])
         wrds_in_string = w_count(s[i], ' ');
@@ -91,7 +90,7 @@ int		ft_size_2d(char **arr)
 	return (i);
 }
 
-char    *get_path(char *hold, t_env *env)
+char    *get_path(t_env *env)
 {
     int i;
     char *temp;
