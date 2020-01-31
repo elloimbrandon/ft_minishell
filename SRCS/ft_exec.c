@@ -6,24 +6,22 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/28 17:39:18 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:38:32 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 
-void    check_system_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void    check_system_cmd(char **input_copy, t_env *env)
 {
     char *hold;
     
-    hold = get_path(hold, env);
+    hold = get_path(env);
     if(hold)
         check_exec(hold, input_copy, env);
     else
-    {
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
-        free(hold); //added
-    }
+    free(hold);
 }
 
 void    check_exec(char *hold, char **input_copy, t_env *env)
@@ -38,14 +36,11 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
     i = -1;
     exec = NULL;
     path = ft_strsplit(hold, ':');
-    free(hold); // added
     while(path[++i])
     {
         exec = build_path(input_copy[0], path[i]);
         if(lstat(exec, &buf) != 1)
         {
-            if(ft_same_cmd(exec, input_copy) == 1)
-                exec = ft_strdup(input_copy[0]);
             if (access(exec, X_OK) == 0)
             {
                 ft_fork(exec, input_copy, env);
@@ -55,9 +50,9 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
         }
         free(exec);
     }
+    ft_free_2d(path);
     if (k == 0 && ft_strcmp(input_copy[0], "\n") != 0)
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
-    ft_free_2d(path);
 }
 
 void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
@@ -65,7 +60,6 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
     char *exec;
     struct stat buf;
 
-    exec = NULL;
     if (ft_strchr(input_copy[0], '/') != NULL && ft_strchr(input_copy[0], '.') != NULL)
     {
         if (lstat(input_copy[0], &buf) != -1)
@@ -74,7 +68,7 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
             {
                 if (access(input_copy[0], X_OK) == 0)
                 {
-                    exec = ft_strdup(input_copy[0] + 2);
+                    exec = ft_strdup(input_copy[0]);
                     ft_fork(exec, input_copy, env);
                 }
                 else
@@ -90,17 +84,14 @@ void    ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
 
 void    ft_fork(char *exec, char **input_copy, t_env *env)
 {
-    char **env_copy;
     pid_t child_p;
 
-    env_copy = copy_2d_array(env->env_copy); // when should i free with
     child_p = fork();
     if(child_p == 0)
-        execve(exec, input_copy, env_copy);
+        execve(exec, input_copy, env->env_copy);
     else if (child_p < 0)
         ft_printf("%sshell: could not create process\n", KRED);
-    free(exec); /// added
-    ft_free_2d(env_copy); // added
+    free(exec);
     wait(&child_p);
 }
 

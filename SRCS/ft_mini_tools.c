@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/28 17:33:13 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:10:58 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,47 +38,47 @@ static int		w_count(char *words, int d)
 	return (count);
 }
 
-static int     ft_count_words_2d(char **s)
+int     ft_count_words_2d(char **s)
 {
     int i;
     int wrds_in_string;
-    int total_wrds;
 
     i = -1;
-    total_wrds = 0;
+    if (!s)
+        return (-1);
+    wrds_in_string = 0;
     while(s[++i])
-    {
         wrds_in_string = w_count(s[i], ' ');
-        total_wrds += wrds_in_string;
-    }
     return (wrds_in_string);
 }
 
-char    **split_by_space(char **input_copy)
-{
-    char **temp;
-    char **ret;
-    int total_wrds;
-    int i;
-    int j;
-    int k;
+// char    **split_by_space(char **input_copy) // it has to be in this fuckin function!!
+// {
+//     char **temp;
+//     char **ret;
+//     int total_wrds;
+//     int i;
+//     int j;
+//     int k;
 
-    i = 0;
-    k = -1;
-    total_wrds = ft_count_words_2d(input_copy);
-    ret = ft_memalloc(sizeof(char**) * (total_wrds + 1));
-    ret[total_wrds] = NULL;
-    while(input_copy[i])
-    {
-        temp = ft_strsplit(input_copy[i++], ' ');
-        j = -1;
-        while(temp[++j])
-            ret[++k] = temp[j];
-        free(temp);
-    }
-    ft_free_2d(input_copy);
-    return(ret);
-}
+//     i = 0;
+//     k = -1;
+//     total_wrds = ft_count_words_2d(input_copy);
+//     if (total_wrds <= 0)
+//         return (NULL);
+//     ret = ft_memalloc(sizeof(char**) * (total_wrds + 1)); // malloc?
+//     ret[total_wrds] = NULL;
+//     while(input_copy[i])
+//     {
+//         temp = ft_strsplit(input_copy[i++], ' ');
+//         j = -1;
+//         while(temp[++j])
+//             ret[++k] = temp[j];
+//         free(temp);
+//     }
+//     ft_free_2d(input_copy);
+//     return(ret);
+// }
 
 int		ft_size_2d(char **arr)
 {
@@ -90,7 +90,7 @@ int		ft_size_2d(char **arr)
 	return (i);
 }
 
-char    *get_path(char *hold, t_env *env)
+char    *get_path(t_env *env)
 {
     int i;
     char *temp;

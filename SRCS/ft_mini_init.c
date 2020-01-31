@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 20:21:43 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/29 18:19:26 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void    init_structs(t_env *env, t_cmd *input_check)
 
     env->env_copy = copy_2d_array(environ);
     env->input = NULL;
-    env->output = NULL;
+    env->output = NULL; // dont think i use
     env->exp_hold = NULL;
     env->tilde_hold = NULL;
     input_check->executed = 0;
@@ -37,7 +37,7 @@ void    init_structs(t_env *env, t_cmd *input_check)
 
 void    ft_zero_out(t_cmd *input_check)
 {
-    input_check->expansions = 0;
-    input_check->tilde = 0;
+    //input_check->expansions = 0;
+    //input_check->tilde = 0;
     input_check->printed_errors = 0;
 }

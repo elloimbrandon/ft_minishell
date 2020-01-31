@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_b_checks.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:42:01 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/23 01:35:59 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/31 00:35:34 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void     check_cd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_cd(input_copy,input_check, env);
 }
 
-void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void     check_env_cmd(char **input_copy, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "env") == 0)
         ft_print_2d(env->env_copy);
@@ -26,15 +26,15 @@ void     check_env_cmd(char **input_copy, t_cmd *input_check, t_env *env)
         ft_printf("%senv: %s: No such file or directory\n", KRED, input_copy[1]);
 }
 
-void     check_pwd_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void     check_pwd_cmd(char **input_copy, t_cmd *input_check)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "pwd") == 0)
-        print_path(env);
+        print_path();
     else if(!input_check->printed_errors && ft_strcmp(input_copy[0], "pwd") == 0)
         ft_printf("%spwd: too many arguments\n", KRED);
 }
 
-void     check_echo_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void     check_echo_cmd(char **input_copy, t_cmd *input_check)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "echo") == 0)
         ft_printf("\n");
@@ -110,7 +110,7 @@ static void    add_env_var(char **input_copy, t_env *env)
 }
 
 
-void    check_setenv(char **input_copy, t_cmd *input_check, t_env *env)
+void    check_setenv(char **input_copy, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "setenv") == 0)
         ft_printf("%ssetenv: not enough arguments\n", KRED);
@@ -134,7 +134,6 @@ static int     unset_env(char *temp, t_env *env, int k)
     {
         if(ft_strccmp(temp, env->env_copy[i], '=') == 0)
         {
-            //ft_strdel(&env->env_copy[i]); // changed 
             free(env->env_copy[i]);
             k = 1;
         }
@@ -149,7 +148,6 @@ static int     unset_env(char *temp, t_env *env, int k)
 
 static int      find_unset_var(char **input_copy, t_env *env)
 {
-    int i;
     int k;
     char *temp;
 
@@ -165,7 +163,7 @@ static int      find_unset_var(char **input_copy, t_env *env)
     return(0);
 }
 
-void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
+void    check_unsetenv(char **input_copy, t_env *env)
 {
     if(!input_copy[1] && ft_strcmp(input_copy[0], "unsetenv") == 0)
         ft_printf("%sunsetenv: not enough arguments\n", KRED);
@@ -178,7 +176,7 @@ void    check_unsetenv(char **input_copy, t_cmd *input_check, t_env *env)
     }
 }
 
-void     check_exit_cmd(char **input_copy, t_cmd *input_check, t_env *env)
+void     check_exit_cmd(char **input_copy)
 {
     if(ft_strcmp(input_copy[0], "exit") == 0)
     {

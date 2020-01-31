@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:38:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/15 00:27:38 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 00:40:03 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void     check_qoutes(char *input_copy, t_cmd *input_check)
     }
 }
 
-void     ft_remove_qoutes(char *input_copy, t_cmd *input_check)
+void     ft_remove_qoutes(char *input_copy)
 {
     int k;
 

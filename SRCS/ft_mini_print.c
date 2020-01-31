@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_mini_print.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brandonf <brfeltz@student.42.us.org>       +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:34:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/16 00:39:09 by brandonf         ###   ########.fr       */
+/*   Updated: 2020/01/31 00:28:35 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void     ft_print_2d(char **two_d)
         ft_printf("%s%s\n", KBLU, two_d[i]);
 }
 
-void    print_path(t_env *env)
+void    print_path(void)
 {
     char display[BUFF + 1];
     
@@ -53,7 +53,7 @@ void     ft_print_echo(char **input_copy, t_cmd *input_check)
     while(input_copy[++i])
     {
         if(input_check->qoutes)
-            ft_remove_qoutes(input_copy[i], input_check);
+            ft_remove_qoutes(input_copy[i]);
         if (!input_check->qoutes)
             ft_printf("%s", input_copy[i]);
         if (input_copy[i + 1])
@@ -77,6 +77,7 @@ int    ft_same_cmd(char *exec, char **input_copy)
     temp = ft_strdup(exec + len);
     if(ft_strcmp(input_copy[0], temp) != 0)
     {
+        free(exec);// added
         free(temp);
         return(1);
     }
