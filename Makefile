@@ -1,9 +1,8 @@
-SRCS = ./SRCS/main.c ./SRCS/ft_signal.c ./SRCS/ft_mini_init.c ./SRCS/ft_mini_tools.c ./SRCS/ft_mini_tools2.c ./SRCS/exp_tild_handles.c ./SRCS/ft_mini_b_checks.c ./SRCS/ft_mini_b_checks2.c ./SRCS/ft_exec.c ./SRCS/ft_mini_print.c 
+SRCS = ./SRCS/main.c ./SRCS/ft_signal.c ./SRCS/ft_mini_init.c ./SRCS/ft_mini_tools.c ./SRCS/ft_mini_tools_2.c ./SRCS/exp_tild_handles.c ./SRCS/ft_builtin_checks.c ./SRCS/ft_exp_tilde_checks.c ./SRCS/ft_exec.c ./SRCS/ft_mini_print.c ./SRCS/set_env.c ./SRCS/unset_env.c ./SRCS/ft_mini_parse.c ./SRCS/ft_cd.c
 
 NAME = minishell
 
 FLAGS = -Wall -Werror -Wextra
-#FLAGS = -g 
 
 LIBFT = libft
 
@@ -12,7 +11,8 @@ all: $(NAME)
 
 $(NAME):
 	@make -C $(LIBFT)
-	make msh
+	@echo "\x1B[32mmaking minishell!"
+	@make msh
 
 msh:
 	@gcc $(SRCS) $(FLAGS) -L $(LIBFT) -lft -o $(NAME)
