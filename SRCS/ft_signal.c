@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/28 01:51:14 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:04:23 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 17:40:00 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int    display_prompt(void)
 {
-    char ft_display[BUFF];// + 1];
+    char ft_display[BUFF];
     
     getcwd(ft_display, BUFF);
     ft_printf("%s%s$>", KGRN, ft_display);
@@ -30,10 +30,14 @@ int    display_prompt(void)
 ** sig number returned for cntl-c to interupt the program process
 */
 
+void    sigint_handler_2(int sig_num)
+{
+    sig_num = 0;
+    ft_printf("\n");
+}
+
 void    sigint_handler(int sig_num)
 {
-    (void)sig_num;
-
     sig_num = 0;
     ft_printf("\n");
     display_prompt();
@@ -45,7 +49,7 @@ void    sigint_handler(int sig_num)
 
 void    sigquit_handler(int sig_num)
 {
-    sig_num = 0; // changed
+    sig_num = 0;
     ft_printf("\n%sGoodbye!\n", KMAG);
     exit(1);
 }

@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:10:58 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 18:19:12 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,34 +51,6 @@ int     ft_count_words_2d(char **s)
         wrds_in_string = w_count(s[i], ' ');
     return (wrds_in_string);
 }
-
-// char    **split_by_space(char **input_copy) // it has to be in this fuckin function!!
-// {
-//     char **temp;
-//     char **ret;
-//     int total_wrds;
-//     int i;
-//     int j;
-//     int k;
-
-//     i = 0;
-//     k = -1;
-//     total_wrds = ft_count_words_2d(input_copy);
-//     if (total_wrds <= 0)
-//         return (NULL);
-//     ret = ft_memalloc(sizeof(char**) * (total_wrds + 1)); // malloc?
-//     ret[total_wrds] = NULL;
-//     while(input_copy[i])
-//     {
-//         temp = ft_strsplit(input_copy[i++], ' ');
-//         j = -1;
-//         while(temp[++j])
-//             ret[++k] = temp[j];
-//         free(temp);
-//     }
-//     ft_free_2d(input_copy);
-//     return(ret);
-// }
 
 int		ft_size_2d(char **arr)
 {

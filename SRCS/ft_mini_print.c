@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:34:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:28:35 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 17:53:11 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void     ft_print_2d(char **two_d)
 
 void    print_path(void)
 {
-    char display[BUFF + 1];
+    char display[BUFF];
     
     getcwd(display, BUFF);
     ft_printf("%s\n", display);
@@ -77,7 +77,7 @@ int    ft_same_cmd(char *exec, char **input_copy)
     temp = ft_strdup(exec + len);
     if(ft_strcmp(input_copy[0], temp) != 0)
     {
-        free(exec);// added
+        free(exec);
         free(temp);
         return(1);
     }

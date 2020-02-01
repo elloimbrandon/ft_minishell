@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:53:37 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 00:38:32 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 17:42:54 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,15 @@ void    check_system_cmd(char **input_copy, t_env *env)
     free(hold);
 }
 
-void    check_exec(char *hold, char **input_copy, t_env *env)
+int    check_path_build_path(char **path, char **input_copy, t_env *env)
 {
-    char **path;
-    char *exec;
-    struct stat buf;
     int i;
     int k;
+    struct stat buf;
+    char *exec;
 
+    i = 0;
     k = 0;
-    i = -1;
-    exec = NULL;
-    path = ft_strsplit(hold, ':');
     while(path[++i])
     {
         exec = build_path(input_copy[0], path[i]);
@@ -50,6 +47,16 @@ void    check_exec(char *hold, char **input_copy, t_env *env)
         }
         free(exec);
     }
+    return(k);
+}
+
+void    check_exec(char *hold, char **input_copy, t_env *env)
+{
+    char **path;
+    int k;
+
+    path = ft_strsplit(hold, ':');
+    k = check_path_build_path(path, input_copy, env);
     ft_free_2d(path);
     if (k == 0 && ft_strcmp(input_copy[0], "\n") != 0)
         ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
@@ -87,6 +94,7 @@ void    ft_fork(char *exec, char **input_copy, t_env *env)
     pid_t child_p;
 
     child_p = fork();
+    signal(SIGINT,sigint_handler_2);
     if(child_p == 0)
         execve(exec, input_copy, env->env_copy);
     else if (child_p < 0)
