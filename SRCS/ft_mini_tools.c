@@ -6,18 +6,27 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:31:41 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 18:19:12 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 19:05:05 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
 
-/*
-** removes the spaces from input and stores them into
-** new 2d array so we can work with array's without spaces
-*/
+int     ft_count_words_2d(char **s)
+{
+    int i;
+    int wrds_in_string;
 
-static int		w_count(char *words, int d)
+    i = -1;
+    if (!s)
+        return (-1);
+    wrds_in_string = 0;
+    while(s[++i])
+        wrds_in_string = w_count(s[i], ' ');
+    return (wrds_in_string);
+}
+
+int		w_count(char *words, int d)
 {
 	int count;
 	int i;
@@ -38,26 +47,12 @@ static int		w_count(char *words, int d)
 	return (count);
 }
 
-int     ft_count_words_2d(char **s)
-{
-    int i;
-    int wrds_in_string;
-
-    i = -1;
-    if (!s)
-        return (-1);
-    wrds_in_string = 0;
-    while(s[++i])
-        wrds_in_string = w_count(s[i], ' ');
-    return (wrds_in_string);
-}
-
 int		ft_size_2d(char **arr)
 {
 	int		i;
 
 	i = 0;
-	while (arr[i])
+	while(arr[i])
 		i++;
 	return (i);
 }
@@ -73,14 +68,14 @@ char    *get_path(t_env *env)
         if (strncmp("PATH=", env->env_copy[i], 5) == 0)
         {
             temp = ft_strdup(env->env_copy[i] + 5);
-            return(temp);
+            return (temp);
         }
     }
-    return(NULL);
+    return (NULL);
 }
 
 char    *build_path(char *input_copy, char *path)
 {
     path = ft_strcat(path, "/");
-    return(ft_strjoin(path, input_copy));
+    return (ft_strjoin(path, input_copy));
 }

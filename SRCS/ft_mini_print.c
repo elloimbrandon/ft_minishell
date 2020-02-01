@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/14 23:34:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 17:53:11 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 19:04:25 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void     ft_print_echo(char **input_copy, t_cmd *input_check)
     i = 0;
     while(input_copy[++i])
     {
-        if(input_check->qoutes)
+        if (input_check->qoutes)
             ft_remove_qoutes(input_copy[i]);
         if (!input_check->qoutes)
             ft_printf("%s", input_copy[i]);
@@ -75,12 +75,12 @@ int    ft_same_cmd(char *exec, char **input_copy)
         len--;
     len++;
     temp = ft_strdup(exec + len);
-    if(ft_strcmp(input_copy[0], temp) != 0)
+    if (ft_strcmp(input_copy[0], temp) != 0)
     {
         free(exec);
         free(temp);
-        return(1);
+        return (1);
     }
     free(temp);
-    return(0);
+    return (0);
 }

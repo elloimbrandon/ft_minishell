@@ -41,17 +41,16 @@ typedef struct		s_env
 
 typedef struct      s_cmd 
 {
-    unsigned int    executed;
     unsigned int    qoutes;
     unsigned int    tilde;
     unsigned int    expansions;
     unsigned int    printed_errors;
+    unsigned int    executed;
 }                   t_cmd;
 
 /*
 ** Functions
 */
-
 
 int     display_prompt(void);
 int     get_input(t_env *env);
@@ -59,9 +58,10 @@ int		ft_size_2d(char **arr);
 int     ft_count_words_2d(char **s);
 int     ft_same_cmd(char *exec, char **input_copy);
 int     find_set_var(char **input_copy, t_env *env);
-int      find_unset_var(char **input_copy, t_env *env);
+int     find_unset_var(char **input_copy, t_env *env);
 int     unset_env(char *temp, t_env *env, int k);
 int     check_path_build_path(char **path, char **input_copy, t_env *env);
+int		w_count(char *words, int d);
 char    *get_path(t_env *env);
 char    *build_path(char *input_copy, char *path);
 char    *find_home(t_env *env);

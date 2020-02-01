@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 18:30:59 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 18:35:56 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 19:04:08 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void    ft_parse_mini(t_env *env, t_cmd *input_check)
     int total_wrds;
 
     i = -1;
-    if(!(input = ft_strsplit(env->input, ';')))
+    if (!(input = ft_strsplit(env->input, ';')))
     {
         free(env->input);
         return ;
@@ -41,9 +41,9 @@ void    ft_parse_mini_2(t_env *env, t_cmd *input_check, char **input)
     int     i;
 
     i = -1;
-    while (input[++i])
+    while(input[++i])
     {
-        if(!(input_copy = ft_strsplit(input[i], ' ')))
+        if (!(input_copy = ft_strsplit(input[i], ' ')))
         {
             ft_free_2d(input_copy);
             return ;
@@ -52,7 +52,7 @@ void    ft_parse_mini_2(t_env *env, t_cmd *input_check, char **input)
         check_bultin(input_copy, input_check, env);
         ft_already_exc(input_check, input_copy);
         ft_local_exec(input_copy, input_check, env);
-        if(input_check->executed == 0)
+        if (input_check->executed == 0)
             check_system_cmd(input_copy, env);
         input_check->executed = 0;
         ft_free_2d(input_copy);
@@ -67,14 +67,14 @@ void    ft_parse_input(t_env *env, t_cmd *input_check, char **input_copy)
     while(input_copy[++i])
     {
         check_env_tilde_qoutes(input_copy[i], input_check);
-        if(input_check->expansions == 1)
+        if (input_check->expansions == 1)
         {
             input_copy[i] = exp_tilde_check(input_copy[i], input_check, env);
             input_check->expansions = 0;
         }
-        if(input_check->tilde == 1)
+        if (input_check->tilde == 1)
         {
-            if(!input_copy[1])
+            if (!input_copy[1])
             {
                 handle_tilde(input_copy[i], env);
                 chdir(env->tilde_hold);

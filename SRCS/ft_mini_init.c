@@ -6,18 +6,11 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/03 22:28:46 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 17:29:29 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 18:37:47 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../HEADERS/ft_minishell.h"
-
-/*
-** copying evironment varibles from (**environ) to a 2d array we 
-** created for parsing and later output if needed
-** setting up struct variables, setting some to 0 or NULL and allocating space
-** for others for later use
-*/
 
 void    init_structs(t_env *env, t_cmd *input_check)
 {

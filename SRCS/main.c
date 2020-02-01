@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/08 17:16:50 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 18:34:25 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/01/31 19:05:29 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,20 @@
 /*
 ** test with csh
 */
+
+void    ft_fork(char *exec, char **input_copy, t_env *env)
+{
+    pid_t child_p;
+
+    child_p = fork();
+    signal(SIGINT,sigint_handler_2);
+    if (child_p == 0)
+        execve(exec, input_copy, env->env_copy);
+    else if (child_p < 0)
+        ft_printf("%sshell: could not create process\n", KRED);
+    free(exec);
+    wait(&child_p);
+}
 
 int		get_input(t_env *env)
 {
@@ -27,29 +41,29 @@ int		get_input(t_env *env)
     count = 0;
     buf = ft_memalloc(sizeof(char*) + 1);
     temp = ft_memalloc(sizeof(char*) + 1);
-	while ((result = read(0, buf, 1)) && (buf[0] != '\n'))
+	while((result = read(0, buf, 1)) && (buf[0] != '\n'))
 	{
         leak = temp;
         temp = ft_strjoin(temp, buf);
         free(leak);
         count = 1;
 	}
-    if(buf[0] == '\n' && count != 1)
+    if (buf[0] == '\n' && count != 1)
         env->input = ft_strdup(buf);
     else
         env->input = ft_strdup(temp);
     free(buf);
     free(temp);
-    return(result == 0 ? 1 : 0);
+    return (result == 0 ? 1 : 0);
 }
 
 void       ft_minishell(t_env *env, t_cmd *input_check)
 {
     while(!display_prompt())
     {
-        if(get_input(env) == 0)
+        if (get_input(env) == 0)
         {
-            if(env->input[0] != '\n')
+            if (env->input[0] != '\n')
                 ft_parse_mini(env, input_check);
             else
                 free(env->input);
@@ -75,5 +89,5 @@ int        main(void)
     signal(SIGQUIT, sigquit_handler);
     signal(SIGINT, sigint_handler);
     ft_minishell(env, input_check);
-    return(0);
+    return (0);
 }
