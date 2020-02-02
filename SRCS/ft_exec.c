@@ -6,7 +6,7 @@
 /*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/31 19:52:35 by brfeltz           #+#    #+#             */
-/*   Updated: 2020/01/31 21:45:08 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/02/01 17:34:16 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ void	ft_local_exec(char **input_copy, t_cmd *input_check, t_env *env)
 				ft_fork(exec, input_copy, env);
 			}
 			else
-				ft_printf("%sshell: Permission denied: %s\n", KRED,
-					input_copy[0]);
+				ft_printf("%sshell: Permission denied: %s\n",
+					KRED, input_copy[0]);
 			chdir(input_copy[0]);
 		}
 		else
-			ft_printf("%sshell: no such file or directory: %s\n", KRED,
-				input_copy[0]);
+			ft_printf("%sshell: no such file or directory: %s\n",
+				KRED, input_copy[0]);
 		input_check->executed = 1;
 	}
 }
@@ -83,8 +83,7 @@ void	check_exec(char *hold, char **input_copy, t_env *env)
 		ft_printf("%sshell: command not found: %s\n", KRED, input_copy[0]);
 }
 
-int		check_path_build_path(char **path,
-						char **input_copy, t_env *env)
+int		check_path_build_path(char **path, char **input_copy, t_env *env)
 {
 	int			i;
 	int			k;

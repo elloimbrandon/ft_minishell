@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/07 14:48:31 by brfeltz           #+#    #+#             */
 /*   Updated: 2019/08/19 22:36:00 by brfeltz          ###   ########.fr       */
+=======
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/06/07 14:48:31 by brfeltz           #+#    #+#             */
+/*   Updated: 2020/01/31 20:55:10 by brfeltz          ###   ########.fr       */
+>>>>>>> 050f0a57321658094be57be0ce6a883d39fbb1be
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +31,26 @@
 ** Macros
 */
 
+<<<<<<< HEAD
 # define LONG_LONG_MAX 9223372036854775807 - 1
 # define LONG_LONG_MIN -9223372036854775807 - 1
 # define MAX_INT 2147483647 - 1
 # define MIN_INT -2147483647 - 1
 
 # define FLAGS(x) (x == '-' || x == '+' || x == '0' || x == ' ')
+=======
+# define LONG_LONG_MAX 9223372036854775806
+# define LONG_LONG_MIN -9223372036854775806
+# define MAX_INT 2147483646
+# define MIN_INT -2147483646
+
+/*
+** # define LONG_LONG_MAX 9223372036854775807 - 1
+** # define LONG_LONG_MIN -9223372036854775807 - 1
+** # define MAX_INT 2147483647 - 1
+** # define MIN_INT -2147483647 - 1
+*/
+>>>>>>> 050f0a57321658094be57be0ce6a883d39fbb1be
 
 /*
 ** Struct

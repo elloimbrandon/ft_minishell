@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brfeltz <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: brfeltz <brfeltz@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/26 21:05:22 by brfeltz           #+#    #+#             */
-/*   Updated: 2019/03/01 12:25:10 by brfeltz          ###   ########.fr       */
+/*   Updated: 2020/02/01 17:28:58 by brfeltz          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 char	*ft_strchr(char const *s, int n)
 {
+	if (!s)
+		return (NULL);
 	while (*s)
 	{
 		if (*s == n)
