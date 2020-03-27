@@ -33,6 +33,7 @@ $(NAME):
 	@gcc $(FLAGS) -c $(SRCS) $(PRINTF) -I $(HEADER)
 	@ar rc $(NAME) $(OBJS)
 	@rm -rf *.o
+	@echo "\x1B[32mLibft made!"
 
 clean:
 	@rm -rf $(OBJS)
