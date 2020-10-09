@@ -58,7 +58,7 @@ Command       |  Action
 After compilation, run executable.
 
 ```bash
-./ft_minishell
+./minishell
 ```
 ![Minishell open](assets/images/minishell-open.png)
 
